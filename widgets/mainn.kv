@@ -1,0 +1,160 @@
+
+
+<HomeScreen>:
+    BoxLayout:
+        padding: [2,2,4,2]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            halign: 'center'
+            text: "Aplikasi Tracking Manusia \n Dalam Ruangan"
+        Label:
+            font_size: 30
+            text: "...Details..."
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 190,50
+            text: "Mulai"
+            on_press: root.manager.current = 'start'
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 190,50
+            text: "Bantuan"
+            on_press: root.manager.current = 'help'
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 190,50
+            text: "Tentang"
+            on_press: root.manager.current = 'about'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+            
+<StartScreen>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            text: "Kriteria video"
+        Label:
+            font_size: 30
+            text: "penjelasannya"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            text: "Pilih video"
+            on_press: selectvid.show_load()
+        Label:
+            font_size: 50
+            text: "Penjelasan proses"
+        Label:
+            font_size: 30
+            text: "langkah proses"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            text: "Proses video"
+            on_press: root.manager.current = 'setting'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<HelpScreen>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            text: "Help"
+        Label:
+            font_size: 50
+            text: "how to use....tutorial explanations...."
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Home"
+            on_press: root.manager.current = 'home'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<AboutScreen>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            text: "About this application"
+        Label:
+            font_size: 30
+            text: "....5W 1H...."
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Home"
+            on_press: root.manager.current = 'home'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<SettingScreen>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            text: "Choose Location Settings"
+        ToggleButton:
+            font_size: 30
+            text: "settings 1"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Add new"
+            on_press:
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Edit"
+            on_press:
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Next"
+            on_press:
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<LoadDialog>:
+    Label:
+        font_size: 50
+        text: "video name"
+    FileChooserIconView:
+        id: fc
+    BoxLayout:
+        size_hint_y: None
+        height: 30
+        Button:
+            text: "Cancel"
+            on_press: selectvid.cancel()
+        Button:
+            text: "Ok"
+            on_press: selectvid.load(fc.path, fc.selection)        

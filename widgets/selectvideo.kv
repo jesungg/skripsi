@@ -1,0 +1,64 @@
+#:kivy 1.1.0
+
+Root:        
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        Label:
+            font_size: 50
+            text: "Kriteria video"
+        Label:
+            font_size: 30
+            text: "penjelasannya"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            text: "Pilih video"
+            on_release: root.show_file()
+        #show filename
+        Label:
+            font_size: 50
+            text: "penjelasannya"
+        #how?
+        Label:
+            font_size: 50
+            text: "penjelasannya"
+        Label:
+            font_size: 30
+            text: "langkah proses"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            text: "Pengaturan Video"
+            on_press: root.move_to_newsetup()
+            #on_release: root.run()
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 190,50
+            text: "Lewati Pengaturan Video"
+            on_press: root.manager.current = 'settings'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<SelectDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserIconView:
+            id: filechooser
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+            Button:
+                text: "Load"
+                on_press: 
+                    root.select(filechooser.path, filechooser.selection)
+                on_release: root.cancel()
