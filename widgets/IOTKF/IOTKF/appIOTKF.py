@@ -1,30 +1,35 @@
+#other lib
+import os
+from pdb import run
+
+import cv2
+import imutils
 import kivy
-kivy.require('1.11.1')
-
+import numpy as np
 from kivy.app import App
-from kivy.lang import Builder
-from kivy.uix.popup import Popup
+from kivy.core.window import Window
 from kivy.factory import Factory
+from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-
 #uix lib
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
-from kivy.uix.button import Button
 from kivy.uix.popup import Popup
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.core.window import Window
+from kivy.uix.screenmanager import Screen, ScreenManager
+
+kivy.require('1.11.1')
 
 
-#other lib
-import os
-import cv2
-import numpy as np
-import imutils
+
+
 
 #other file
+
+#dictionaries
+stringnya =  None
 
 #kv filepath
 Window.size = (800, 800)
@@ -42,23 +47,36 @@ class openFileDiag(BoxLayout): #pop1
 
 class selVidScr(Screen): #2
     def dismiss_popup(self):
-        print("close popup")
+        #print("close popup")
         self._popup.dismiss()
+    def getImg(self,fileloc):
+        vidcap = cv2.VideoCapture(fileloc)
+        success, image = vidcap.read()
+        if success:
+            cv2.imwrite("widgets/IOTKF/IOTKF/res/first_frame.jpg", image)  # save frame as JPEG file
     def select(self, dirpath, filepath):
-        print('path', dirpath,type(dirpath))
-        print('filename', filepath, type(filepath))
+        #print('path', dirpath,type(dirpath))
+        #print('filename', filepath, type(filepath))
         stringnya = str(filepath)
-        print('stringnya', stringnya, type(stringnya))
+        stringnya = stringnya[2:-2]
+        acceptedformat = 'mp4'
+        print('stringnya', stringnya, type(stringnya), acceptedformat)
+        print(stringnya[-3:])
+        if stringnya[-3:] == acceptedformat:
+            print("acceptedformat")
+            self.getImg(fileloc=stringnya)
+            pass
+        else:
+            print("not accepted")
+            stringnya = None 
         self.dismiss_popup()
+        return stringnya
     def show_file(self):
         print("show popup")
         content = openFileDiag(select=self.select, cancel=self.dismiss_popup)
         self._popup =Popup(title="Select video file", content=content, size_hint=(.9, .9))
         self._popup.open()
-
-        
-
-
+    
 
 class chooseSet(Screen): #3
     pass
