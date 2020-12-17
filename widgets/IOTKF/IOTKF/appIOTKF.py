@@ -18,6 +18,9 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 #other lib
 import os
+import cv2
+import imutils
+
 #other file
 
 #kv filepath
@@ -40,8 +43,6 @@ class chooseSet(Screen): #3
 class newSet(Screen): #4
     def show_coor(self):
         import coordinates
-#ntr on release nya ke screen next masukin cv.destroyWindow(winname)
-    
     
 class cNoise(FloatLayout): #pop2
     pass

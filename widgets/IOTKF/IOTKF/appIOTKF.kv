@@ -160,58 +160,329 @@
                 orientation: 'vertical'
                 Label:
                     font_size: 12
-                    text: "Noise location x"
-                Label:
-                    font_size: 12
-                    text: "Noise location y"
-            BoxLayout:
-                padding: [2,2,2,10]
-                spacing: 2
-                orientation: 'vertical'
+                    text: "Noise coordinate"
                 TextInput:
-                    id: noise_loc_x
+                    id: noise_loc
+                    input_filter: 'int'
                     multiline:False
                     font_size: 12
                 TextInput:
-                    id: noise_loc_y
+                    id: noise_code
+                    input_filter: 'int'
                     multiline:False
                     font_size: 12
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
                 orientation: 'vertical'
+                Label:
+                    font_size: 12
+                    text: "location"
                 BoxLayout:
                     padding: [2,2,2,10]
                     spacing: 2
-                    orientation: 'horizontal'
-                    CheckBox:
-                        on_active:
-                    Label:
-                        font_size: 12
-                        text: "Horizontal Top"  
+                    orientation: 'vertical'
+                    BoxLayout:
+                        padding: [2,2,2,10]
+                        spacing: 2
+                        orientation: 'horizontal'
+                        CheckBox:
+                            id: ht
+                            on_active:
+                        Label:
+                            font_size: 12
+                            text: "Horizontal Top"  
+                    BoxLayout:
+                        padding: [2,2,2,10]
+                        spacing: 2
+                        orientation: 'horizontal'
+                        CheckBox:
+                            id: hb
+                            on_active:
+                        Label:
+                            font_size: 12
+                            text: "Horizontal Bottom"
                 BoxLayout:
                     padding: [2,2,2,10]
                     spacing: 2
-                    orientation: 'horizontal'
-                    CheckBox:
-                        on_active:
-                    Label:
-                        font_size: 12
-                        text: "Horizontal Bottom"
+                    orientation: 'vertical'
+                    BoxLayout:
+                        padding: [2,2,2,10]
+                        spacing: 2
+                        orientation: 'horizontal'
+                        CheckBox:
+                            id:vl
+                            on_active:
+                        Label:
+                            font_size: 12
+                            text: " Vertical Left"
+                        
+                    BoxLayout:
+                        padding: [2,2,2,10]
+                        spacing: 2
+                        orientation: 'horizontal'
+                        CheckBox:
+                            id:vr
+                            on_active:
+                        Label:
+                            font_size: 12
+                            text: "Vertical Right"                     
+        BoxLayout:
+            padding: [2,2,2,10]
+            spacing: 2
+            orientation: 'vertical'
+            Label:
+                font_size: 15
+                text: "Actions"
+            Label:
+                font_size: 12
+                text: ""
+        BoxLayout:
+            padding: [2,2,2,10]
+            spacing: 2
+            orientation: 'horizontal'
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
                 orientation: 'vertical'
-                Label:
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
                     font_size: 12
-                    text: " Vertical Left"
-                CheckBox:
-                    on_active:
-                Label:
+                    text: "action 1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
                     font_size: 12
-                    text: "Vertical Right"
-                CheckBox:
-                    on_active:
+                    text: "action 2"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    text: "action 3" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    text: "action 4" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    text: "action 5" 
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x0" 
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y0" 
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "x1"
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    text: "y1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter:'int'
+                    text: "y1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    text: "y1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    text: "y1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    text: "y1"
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            size_hint: None, None
+            size: 150,20
+            text: "Save"
+            on_press: root.manager.current = 'choose_set'
         Label:
             font_size: 10
             text: "...v0.0...dd/mm/yy..."
+<chooseSet>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        BoxLayout:
+            padding: [2,2,2,10]
+            spacing: 2
+            orientation: 'vertical'
+            Button:
+                id:tb_ns_1
+                font_size: 10
+                text: "name_setting 1"
+                on_press:
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            size_hint: None, None
+            size: 150,20
+            text: "Save"
+            on_press: root.manager.current = 'result_scr'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+<resultScr>:
+    BoxLayout:
+        padding: [2,2,2,10]
+        spacing: 2
+        orientation: 'vertical'
+        BoxLayout:
+            padding: [2,2,2,10]
+            spacing: 2
+            orientation: 'horizontal'
+            Image:
+                source: 'sampeltest.png'
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            size_hint: None, None
+            size: 150,20
+            text: "Finish"
+            on_press: root.manager.current = 'welcome_scr'
+        Label:
+            font_size: 10
+            text: "...v0.0...dd/mm/yy..."
+             
+    
+
