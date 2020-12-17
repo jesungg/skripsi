@@ -146,7 +146,7 @@
             size: 250,50
             id: setup_name
             font_size: 25
-            hint_text: "New video setup name"
+            hint_text: "Video setup name"
         Button:
             pos_hint: {'center_x': .9, 'center_y': .5}
             size_hint: None, None
@@ -175,7 +175,7 @@
                     size_hint: None, None
                     size: 110,30
                     id: noise_code
-                    hint_text: 'noise location'
+                    hint_text: 'HT/HB/VL/VR'
                     multiline:False
                     font_size: 12
             BoxLayout:
@@ -232,12 +232,8 @@
             orientation: 'vertical'
             Label:
                 pos_hint: {'center_x': .5, 'center_y': .5}
-                font_size: 15
-                text: "Actions"
-            Label:
-                pos_hint: {'center_x': .5, 'center_y': .5}
                 font_size: 12
-                text: ""
+                text: "Actions" 
         BoxLayout:
             padding: [2,2,2,10]
             spacing: 2
@@ -247,60 +243,70 @@
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
+                    id: a1nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 1" 
                 TextInput:
+                    id: a2nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 2"
                 TextInput:
+                    id: a3nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 3" 
                 TextInput:
+                    id: a4nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 4" 
                 TextInput:
+                    id: a5nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 5"
                 TextInput:
+                    id: a6nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 6" 
                 TextInput:
+                    id: a7nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 7"
                 TextInput:
+                    id: a8nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 8" 
                 TextInput:
+                    id: a9nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     hint_text: "action 9" 
                 TextInput:
+                    id: a10nem
                     size_hint: (.7, None)
                     height: 30
                     multiline: False
@@ -310,7 +316,14 @@
                 padding: [2,2,2,10]
                 spacing: 2
                 orientation: 'vertical'
+                Label:
+                    text:"   "
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
                 TextInput:
+                    id: a1xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -318,6 +331,7 @@
                     input_filter: 'int'
                     hint_text: "x0" 
                 TextInput:
+                    id: a2xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -325,6 +339,7 @@
                     input_filter: 'int'
                     hint_text: "x0"
                 TextInput:
+                    id: a3xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -332,6 +347,7 @@
                     input_filter: 'int'
                     hint_text: "x0" 
                 TextInput:
+                    id: a4xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -339,6 +355,7 @@
                     input_filter: 'int'
                     hint_text: "x0"
                 TextInput:
+                    id: a5xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -346,6 +363,7 @@
                     input_filter: 'int'
                     hint_text: "x0"
                 TextInput:
+                    id: a6xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -353,6 +371,7 @@
                     input_filter: 'int'
                     hint_text: "x0" 
                 TextInput:
+                    id: a7xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -360,6 +379,7 @@
                     input_filter: 'int'
                     hint_text: "x0"
                 TextInput:
+                    id: a8xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -367,6 +387,7 @@
                     input_filter: 'int'
                     hint_text: "x0" 
                 TextInput:
+                    id: a9xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -374,6 +395,7 @@
                     input_filter: 'int'
                     hint_text: "x0"
                 TextInput:
+                    id: a10xnol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -385,6 +407,7 @@
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
+                    id: a1ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -392,6 +415,7 @@
                     input_filter: 'int'
                     hint_text: "y0" 
                 TextInput:
+                    id: a2ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -399,6 +423,7 @@
                     input_filter: 'int'
                     hint_text: "y0"
                 TextInput:
+                    id: a3ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -406,6 +431,7 @@
                     input_filter: 'int'
                     hint_text: "y0" 
                 TextInput:
+                    id: a4ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -413,6 +439,7 @@
                     input_filter: 'int'
                     hint_text: "y0"
                 TextInput:
+                    id: a5ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -420,6 +447,7 @@
                     input_filter: 'int'
                     hint_text: "y0"
                 TextInput:
+                    id: a6ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -427,6 +455,7 @@
                     input_filter: 'int'
                     hint_text: "y0" 
                 TextInput:
+                    id: a7ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -434,6 +463,7 @@
                     input_filter: 'int'
                     hint_text: "y0"
                 TextInput:
+                    id: a8ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -441,6 +471,7 @@
                     input_filter: 'int'
                     hint_text: "y0" 
                 TextInput:
+                    id: a9ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -448,6 +479,7 @@
                     input_filter: 'int'
                     hint_text: "y0"
                 TextInput:
+                    id: a10ynol
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -459,6 +491,7 @@
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
+                    id: a1xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -466,6 +499,7 @@
                     input_filter: 'int'
                     hint_text: "x1" 
                 TextInput:
+                    id: a2xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -473,6 +507,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
                 TextInput:
+                    id: a3xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -480,6 +515,7 @@
                     input_filter: 'int'
                     hint_text: "x1" 
                 TextInput:
+                    id: a4xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -487,6 +523,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
                 TextInput:
+                    id: a5xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -494,6 +531,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
                 TextInput:
+                    id: a6xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -501,6 +539,7 @@
                     input_filter: 'int'
                     hint_text: "x1" 
                 TextInput:
+                    id: a7xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -508,6 +547,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
                 TextInput:
+                    id: a8xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -515,6 +555,7 @@
                     input_filter: 'int'
                     hint_text: "x1" 
                 TextInput:
+                    id: a9xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -522,6 +563,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
                 TextInput:
+                    id: a10xsatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -533,6 +575,7 @@
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
+                    id: a1ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -540,6 +583,7 @@
                     input_filter: 'int'
                     hint_text: "y1" 
                 TextInput:
+                    id: a2ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -547,6 +591,7 @@
                     input_filter:'int'
                     hint_text: "y1"
                 TextInput:
+                    id: a3ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -554,6 +599,7 @@
                     font_size: 12
                     hint_text: "y1" 
                 TextInput:
+                    id: a4ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -561,6 +607,7 @@
                     font_size: 12
                     hint_text: "y1"
                 TextInput:
+                    id: a5ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -568,6 +615,7 @@
                     font_size: 12
                     hint_text: "y1"
                 TextInput:
+                    id: a6ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -575,6 +623,7 @@
                     input_filter: 'int'
                     hint_text: "y1" 
                 TextInput:
+                    id: a7ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -582,6 +631,7 @@
                     input_filter:'int'
                     hint_text: "y1"
                 TextInput:
+                    id: a8ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -589,6 +639,7 @@
                     font_size: 12
                     hint_text: "y1" 
                 TextInput:
+                    id: a9ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -596,6 +647,7 @@
                     font_size: 12
                     hint_text: "y1"
                 TextInput:
+                    id: a10ysatu
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
@@ -607,12 +659,14 @@
             size_hint: None, None
             size: 150,20
             text: "Save"
-            on_press: root.manager.current = 'choose_set'
+            on_release: root.manager.current = 'choose_set'
+            on_press: root.get_variables()
         Label:
             pos_hint: {'center_x': .5, 'center_y': .9}
             font_size: 10
             text: "...v0.0...dd/mm/yy..."
 <chooseSet>:
+    on_enter:root.pulldata()
     BoxLayout:
         padding: [2,2,2,10]
         spacing: 2
@@ -621,16 +675,6 @@
             padding: [2,2,2,10]
             spacing: 2
             orientation: 'vertical'
-            ToggleButton:
-                id:tb_ns_1
-                font_size: 10
-                text: "name_setting 1"
-                on_press:
-            ToggleButton:
-                id:tb_ns_2
-                font_size: 10
-                text: "name_setting 2"
-                on_press:
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
