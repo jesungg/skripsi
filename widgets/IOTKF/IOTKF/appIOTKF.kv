@@ -49,7 +49,7 @@
             size_hint: None, None
             size: 140,50
             text: "Pilih video"
-            on_press: root.show_file()
+            on_release: root.show_file()
          #show filename
         Label:
             font_size: 50
@@ -140,14 +140,17 @@
         padding: [2,2,2,10]
         spacing: 2
         orientation: 'vertical'
-        Label:
-            font_size: 50
-            text: "New video setup"
+        TextInput:
+            pos_hint: {'center_x': .5, 'center_y': .5}
+            size_hint: None, None
+            size: 250,50
+            id: setup_name
+            font_size: 25
+            hint_text: "New video setup name"
         Button:
             pos_hint: {'center_x': .9, 'center_y': .5}
             size_hint: None, None
-            size: 250,50
-            size_hint: .2, .1
+            size: 250,30
             text: "show coordinate"
             on_press: root.show_coor()
         BoxLayout:
@@ -158,17 +161,21 @@
                 padding: [2,2,2,10]
                 spacing: 2
                 orientation: 'vertical'
-                Label:
-                    font_size: 12
-                    text: "Noise coordinate"
                 TextInput:
+                    pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
                     id: noise_loc
+                    hint_text: 'noise coordinate'
                     input_filter: 'int'
                     multiline:False
                     font_size: 12
                 TextInput:
+                    pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
                     id: noise_code
-                    input_filter: 'int'
+                    hint_text: 'noise location'
                     multiline:False
                     font_size: 12
             BoxLayout:
@@ -176,8 +183,9 @@
                 spacing: 2
                 orientation: 'vertical'
                 Label:
-                    font_size: 12
-                    text: "location"
+                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    font_size: 15
+                    text: "locations"
                 BoxLayout:
                     padding: [2,2,2,10]
                     spacing: 2
@@ -186,22 +194,18 @@
                         padding: [2,2,2,10]
                         spacing: 2
                         orientation: 'horizontal'
-                        CheckBox:
-                            id: ht
-                            on_active:
                         Label:
+                            pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
-                            text: "Horizontal Top"  
+                            text: "HT : Horizontal Top"  
                     BoxLayout:
                         padding: [2,2,2,10]
                         spacing: 2
                         orientation: 'horizontal'
-                        CheckBox:
-                            id: hb
-                            on_active:
                         Label:
+                            pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
-                            text: "Horizontal Bottom"
+                            text: "HB : Horizontal Bottom"
                 BoxLayout:
                     padding: [2,2,2,10]
                     spacing: 2
@@ -210,31 +214,28 @@
                         padding: [2,2,2,10]
                         spacing: 2
                         orientation: 'horizontal'
-                        CheckBox:
-                            id:vl
-                            on_active:
                         Label:
+                            pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
-                            text: " Vertical Left"
-                        
+                            text: "VL : Vertical Left"
                     BoxLayout:
                         padding: [2,2,2,10]
                         spacing: 2
                         orientation: 'horizontal'
-                        CheckBox:
-                            id:vr
-                            on_active:
                         Label:
+                            pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
-                            text: "Vertical Right"                     
+                            text: "VR : Vertical Right"                     
         BoxLayout:
             padding: [2,2,2,10]
             spacing: 2
             orientation: 'vertical'
             Label:
+                pos_hint: {'center_x': .5, 'center_y': .5}
                 font_size: 15
                 text: "Actions"
             Label:
+                pos_hint: {'center_x': .5, 'center_y': .5}
                 font_size: 12
                 text: ""
         BoxLayout:
@@ -246,35 +247,65 @@
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
-                    size_hint: (.5, None)
+                    size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
-                    text: "action 1" 
+                    hint_text: "action 1" 
                 TextInput:
-                    size_hint: (.5, None)
+                    size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
-                    text: "action 2"
+                    hint_text: "action 2"
                 TextInput:
-                    size_hint: (.5, None)
+                    size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
-                    text: "action 3" 
+                    hint_text: "action 3" 
                 TextInput:
-                    size_hint: (.5, None)
+                    size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
-                    text: "action 4" 
+                    hint_text: "action 4" 
                 TextInput:
-                    size_hint: (.5, None)
+                    size_hint: (.7, None)
                     height: 30
                     multiline: False
                     font_size: 12
-                    text: "action 5" 
+                    hint_text: "action 5"
+                TextInput:
+                    size_hint: (.7, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    hint_text: "action 6" 
+                TextInput:
+                    size_hint: (.7, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    hint_text: "action 7"
+                TextInput:
+                    size_hint: (.7, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    hint_text: "action 8" 
+                TextInput:
+                    size_hint: (.7, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    hint_text: "action 9" 
+                TextInput:
+                    size_hint: (.7, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    hint_text: "action 10" 
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
@@ -285,35 +316,70 @@
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x0" 
+                    hint_text: "x0" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x0"
+                    hint_text: "x0"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x0" 
+                    hint_text: "x0" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x0"
+                    hint_text: "x0"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x0" 
+                    hint_text: "x0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x0"  
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
@@ -324,35 +390,70 @@
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y0" 
+                    hint_text: "y0" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y0"
+                    hint_text: "y0"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y0" 
+                    hint_text: "y0" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y0"
+                    hint_text: "y0"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y0" 
+                    hint_text: "y0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y0" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y0"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y0"  
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
@@ -363,35 +464,70 @@
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x1" 
+                    hint_text: "x1" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x1"
+                    hint_text: "x1"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x1" 
+                    hint_text: "x1" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x1"
+                    hint_text: "x1"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "x1"
+                    hint_text: "x1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "x1"
             BoxLayout:
                 padding: [2,2,2,10]
                 spacing: 2
@@ -402,42 +538,78 @@
                     multiline: False
                     font_size: 12
                     input_filter: 'int'
-                    text: "y1" 
+                    hint_text: "y1" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     font_size: 12
                     input_filter:'int'
-                    text: "y1"
+                    hint_text: "y1"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     input_filter: 'int'
                     font_size: 12
-                    text: "y1" 
+                    hint_text: "y1" 
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     input_filter: 'int'
                     font_size: 12
-                    text: "y1"
+                    hint_text: "y1"
                 TextInput:
                     size_hint: (.5, None)
                     height: 30
                     multiline: False
                     input_filter: 'int'
                     font_size: 12
-                    text: "y1"
+                    hint_text: "y1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter: 'int'
+                    hint_text: "y1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    font_size: 12
+                    input_filter:'int'
+                    hint_text: "y1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    hint_text: "y1" 
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    hint_text: "y1"
+                TextInput:
+                    size_hint: (.5, None)
+                    height: 30
+                    multiline: False
+                    input_filter: 'int'
+                    font_size: 12
+                    hint_text: "y1"
         Button:
-            pos_hint: {'center_x': .5, 'center_y': .8}
+            pos_hint: {'center_x': .5, 'center_y': .9}
             size_hint: None, None
             size: 150,20
             text: "Save"
             on_press: root.manager.current = 'choose_set'
         Label:
+            pos_hint: {'center_x': .5, 'center_y': .9}
             font_size: 10
             text: "...v0.0...dd/mm/yy..."
 <chooseSet>:
@@ -449,16 +621,21 @@
             padding: [2,2,2,10]
             spacing: 2
             orientation: 'vertical'
-            Button:
+            ToggleButton:
                 id:tb_ns_1
                 font_size: 10
                 text: "name_setting 1"
+                on_press:
+            ToggleButton:
+                id:tb_ns_2
+                font_size: 10
+                text: "name_setting 2"
                 on_press:
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
             size: 150,20
-            text: "Save"
+            text: "Next"
             on_press: root.manager.current = 'result_scr'
         Label:
             font_size: 10
@@ -483,6 +660,3 @@
         Label:
             font_size: 10
             text: "...v0.0...dd/mm/yy..."
-             
-    
-
