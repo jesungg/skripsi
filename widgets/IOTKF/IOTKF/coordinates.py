@@ -32,7 +32,7 @@ def click_event(event, x, y, flags, param):
 
 
 #Here, you need to change the image name and it's path according to your directory
-img = cv2.imread("widgets/IOTKF/IOTKF/sampeltest.png")
+img = cv2.imread("/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/sampeltest.png")
 img = imutils.resize(img, width=600)
 cv2.imshow("image", img)
 
@@ -40,10 +40,8 @@ cv2.imshow("image", img)
 cv2.setMouseCallback("image", click_event)
 
 if cv2.waitKey(0) == 27:  # if key 'q' is pressed 
-#         print('You Pressed A Key!')
-# if cv2.waitKey(0) == 27:
-    refPt.clear()
-    print(refPt)
+    cv2.destroyWindow("image")
+    
 
 
 
