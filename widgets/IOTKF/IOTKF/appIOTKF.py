@@ -300,7 +300,7 @@ class cNoise(FloatLayout): #pop2
 class addAct(FloatLayout): #pop3
     pass
 class loadingScr(Screen): #5
-     pass
+    pass
 class resultScr(Screen): #6
     pass
 class resultVid(FloatLayout): #pop4
