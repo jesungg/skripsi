@@ -27,6 +27,13 @@ from kivy.uix.screenmanager import Screen, ScreenManager
 #uix lib
 from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
 from numpy import ndarray
+import math
+
+from filterpy.common import Q_discrete_white_noise
+from filterpy.kalman import KalmanFilter
+from filterpy.kalman.kalman_filter import predict, update
+import filterpy
+
 
 store = JsonStore('storage.json')
 
@@ -307,8 +314,185 @@ class addAct(FloatLayout): #pop3
 class loadingScr(Screen): #5
     pass
 class resultScr(Screen): #6
+    def kf(self,x_obj,y_obj):
+        #list posisi objek
+        pos_x = x_obj
+        pos_y = y_obj
+        kf_res_x = []
+        kf_res_y = []
+        kf_res_vx = []
+        kf_res_vy = []
+
+        def vel(alist):
+            vel_list = [0.]
+            for i in range(len(alist)):
+                j = i+1
+                print(i)
+                print(alist[i])
+                try:
+                    vel_list.append(alist[j] - alist[i])
+                except:
+                    pass
+            return vel_list
+
+        #list acceleration; input=vel_list
+        def accel(alist):
+            accel_list = [0., 0.]
+            try:
+                if not alist[2]:
+                    pass
+                else:
+                    for i in range(len(alist)):
+                        j = i+1
+                        k = j+1
+                        accel_list.append(alist[k]-alist[j]) 
+            except:
+                pass
+            return accel_list
+
+        #list error
+        def sqrt_alist(alist): #input alist= _min_avg yang mau di kuadrat
+            sqrt_list=[]
+            for i in range(len(alist)):
+                sqrt_list.append(round((alist[i]**2), 2))
+            return sqrt_list
+
+        def avgpos(alist):
+            average = sum(alist) / len(alist)
+            average = round(average, 2)
+            return average
+
+        def avgvel(alist):
+            average = sum(alist) / (len(alist)-1)
+            average = round(average, 2)
+            return average
+
+        def pos_min_avg(alist):
+            min_avg = []
+            try:
+                for i in range(len(alist)):
+                    min_aver = alist[i] - avgpos(alist)
+                    min_avg.append(round(min_aver, 2))
+            except:
+                pass
+            return min_avg
+
+        def vel_min_avg(alist):
+            min_avg = [0.]
+            for i in range(len(alist)):
+                j = i+1
+                try:
+                    min_avg.append(round((alist[j] - avgvel(alist)), 2))
+                except:
+                    pass
+            return min_avg
+
+        #standar deviasi
+        def stdpos(alist): #input=list yang udh di kuadrat
+            n = len(alist) 
+            std = math.sqrt( (1/(n-1)) * sum(alist) )
+            return std
+
+        def stdvel(alist): #input=list yang udh di kuadrat; -2 soalnya isi mulai dr index 1
+            n = len(alist)
+            std = math.sqrt( (1/(n-2)) * sum(alist) )
+            return std
+
+        vel_x = vel(pos_x)
+        vel_y = vel(pos_y)
+        accelx = accel(pos_x)
+        accely = accel(pos_y)
+
+        var_x = stdpos( sqrt_alist( pos_min_avg(pos_x) ) )
+        var_y = stdpos( sqrt_alist( pos_min_avg(pos_y) ) )
+        var_vx = stdvel( sqrt_alist( vel_min_avg(vel_x) ) )
+        var_vy = stdvel( sqrt_alist( vel_min_avg(vel_y) ) )
+
+
+        ### TRACKING POSITION AND VELOCITY FROM POSITIONS ###
+
+        # CONSTRUCT OBJECTS DIMENSIONALITY (4x1 dengan 4x4)
+        f = KalmanFilter( dim_x = 4,
+                        dim_z = 4 )
+
+        # ASSIGN INIT VALUES (proses mengkuti contoh soal)
+        f.x = np.array([ pos_x[2],
+                        pos_y[2],      #position
+                        vel_x[2],
+                        vel_y[2] ])    #velocity
+
+        # DEF STATE TRANSITION MATRIX
+        f.F = np.array([ [1., 0., 1., 0.],
+                        [0., 1., 0., 1.],
+                        [0., 0., 1., 0.], 
+                        [0., 0., 0., 1.] ])
+        f.B = np.array([ [.5, 0.],
+                        [0., .5],
+                        [1., 0.], 
+                        [0., 1.] ])
+        f.u = np.array([ accelx[2],
+                        accely[2] ])
+
+        # DEF MEASUREMENT FUNCTION
+        f.H = np.array([ [1., 0., 0., 0.],
+                        [0., 1., 0., 0.],
+                        [0., 0., 1., 0.], 
+                        [0., 0., 0., 1.] ])
+
+        # DEF COVARIANCE MATRIX
+        f.P = np.array([ [.9*((var_x)**2), 0., 1., 0.],
+                        [0., .9*((var_y)**2), 0., 1.],
+                        [0., 0., .9*((var_vx)**2), 0.], 
+                        [0., 0., 0., .9*((var_vy)**2)] ])
+
+        # ASSIGN MEASUREMENT NOISE
+        f.R = np.array([ [(var_x)**2, 0., 1., 0.],
+                        [0., (var_y)**2, 0., 1.],
+                        [0., 0., (var_vx)**2, 0.], 
+                        [0., 0., 0., (var_vy)**2] ])
+
+        # ASSIGN PROCESS NOISE  
+        f.Q = np.zeros((4,4))
+
+        #sensor input
+        def sensor_read():
+            a =np.array([ [231.],
+                        [77.],      #position
+                        [ np.negative(26.)],
+                        [4.] ])    #velocity
+            return a
+
+        # PREDICT UPDATE LOOP
+        for i in range(len(accelx)-3): #masi kebanyakan len nya mknya out of range
+            z = np.array([ pos_x[i+3],
+                        pos_y[i+3],      #position
+                        vel_x[i+3],
+                        vel_y[i+3] ])    #velocity    
+            f.predict()
+            try:
+                f.u = np.array([ accelx(i+3),
+                                accely(i+3)  ])
+            except:
+                pass
+            f.update(z)
+            kf_res_x.append(np.round(f.x[0]))
+            kf_res_y.append(np.round(f.x[1]))
+            kf_res_vx.append(np.round(f.x[2]))
+            kf_res_vy.append(np.round(f.x[3]))
+
+            #print('input z:')
+            #print(z)
+            #print('predict')
+            #print(f.x)
+
+        print(kf_res_x,kf_res_y,kf_res_vx,kf_res_vy)
+        b=.9*((var_vy)**2)
+        print(b)
+        print(var_x,var_y,var_vx,var_vy)
+        print(f.R)
+
     #object detection
-    def titiktengah(self,kontur):
+    def titiktengah(self, kontur):
         M = cv2.moments(kontur)
         x = int(M['m10']/M['m00'])
         y = int(M['m01']/M['m00'])
@@ -333,83 +517,127 @@ class resultScr(Screen): #6
         lineType               = 2
 
         kernel = np.ones((5,5),np.uint8)
-        vid_path = store.get('video_data')['video_path']
-        cap = cv2.VideoCapture(vid_path)
+
+        cap = cv2.VideoCapture(store.get('video_data')['video_path'])
+        bgsub = cv2.createBackgroundSubtractorMOG2()
         fps =  FPS().start()
-        #frame_width = int(cap.get(3))
-        frame_height = int(cap.get(4))
-        ret, frame = cap.read()
         try:
-            out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 20, (600,337))
+            out = cv2.VideoWriter('obdet.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 20, (600,337))
         except:
             pass
 
-        if frame is None:
-                fps.stop()
-        else:
+
+        while True:
+            ret, frame = cap.read()
             fps.update()
-            try:   
+        
+            try:    
                 frame = imutils.resize(frame, width=600)
                 (aw, ah, ac) = frame.shape
-            except Exception as e:
-                print('frame resize error',e)
+            except:
                 pass
-            
+
+            if frame is None:
+                fps.stop()
+                break
+
+            #every second do
             if sframe % nframe == 0 :
-                bgsub = cv2.createBackgroundSubtractorMOG2()
+
+                #proses preprocessing 
                 fgmask = bgsub.apply(frame)
                 gblur = cv2.GaussianBlur(fgmask, (11,11), 0)
                 erosion = cv2.erode(fgmask,kernel,iterations = 1)
                 dilation = cv2.dilate(erosion,kernel,iterations = 1)
                 closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel)
-                contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+                rect_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 30))
+                threshed = cv2.morphologyEx(closing, cv2.MORPH_CLOSE, rect_kernel)
 
-                for contour in contours:
-                    (x,y,w,h) = cv2.boundingRect(contour)
+                #cari kontur
+                contours, _ = cv2.findContours(threshed, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+                contNum = len(contours) #semua kontur dan semua pikselnya
+                hull_list = []
+                
+                for i in range(contNum):
+                    (x,y,w,h) = cv2.boundingRect(contours[i]) #kotakin, balikin nilai koornya
+                    #in piksel
                     cont_h = y+h
                     cont_w = x+w
-                    if cv2.contourArea(contour) < 750:
+
+                    #overall byk piksel kurang dari ini skip
+                    if cv2.contourArea(contours[i]) < 750:
                         continue
-                    if cont_h < 200 :
+                    #tinggi kurang dr ini skip
+                    if cont_h < 250 :
                         continue
-                    hull = cv2.convexHull(contour)
-                    cv2.drawContours(frame, [hull], -1, (255, 0, 0), 2)
-                    cv2.rectangle(frame, (x,y),(cont_w, cont_h), (0,255,0), 2)
-                    
-                    contSize = len(contour) #semua piksel sebuah kontur
-                    contNum = len(contours) #semua kontur dan semua pikselnya
+
+                    #hull
+                    hull = cv2.convexHull(contours[i])
+                    hull_list.append(hull)
+                    drawing = np.zeros((closing.shape[0], closing.shape[1], 3), dtype=np.uint8)
+                    #ambil centroid & ilangin duplikat
+                    cx, cy = self.titiktengah(hull)
+
+                    if noise_cd =='HT':
+                        if cy < noise_lc:
+                            continue
+                    if noise_cd =='HB':
+                        if cy > noise_lc:
+                            continue
+                    if noise_cd =='VL':
+                        if cx < noise_lc:
+                            continue
+                    if noise_cd =='VR':
+                        if cx > noise_lc:
+                            continue
+
                     if contNum > 1:
-                        print('lebih dr 1')
-                        for i in range(contNum):
-                            try:
-                                cx, cy = self.titiktengah(hull)
-                                if cx[i] == cx[i+1]:
-                                    if cy[i] == cy[i+1]:
-                                        pass
+                        try:
+                            if cx[i] == cx[i+1]:
+                                if cy[i] == cy[i+1]:
                                     pass
-                            except:
-                                pass
-                            i = i+1
+                        except:
+                            pass
+                        cv2.rectangle(drawing, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
                         x_obj.append(cx)
                         y_obj.append(cy)
-                        #print(cx,cy)
-                        #print(x_obj,y_obj)
                     else:
-                        print('satu')
-                        cx, cy = self.titiktengah(hull)
+                        cv2.rectangle(drawing, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
                         x_obj.append(cx)
                         y_obj.append(cy)
 
-                sframe += 1
-                fps.update()
-                # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-                out.write(frame)
+                # Draw contours + hull results
+                for i in range(len(contours)):
+                    try:
+                        color = (rng.randint(0,256), rng.randint(0,256), rng.randint(0,256))
+                        cv2.drawContours(drawing, hull_list, i, color)
+                    except:
+                        pass
+                    #kalo contour >1
+                try:
+                    for i in range (len(x_obj)):
+                        cv2.line(drawing, (x_obj[i],y_obj[i]), (x_obj[i+1],y_obj[i+1]), (0,0,255), 2) 
+                except:
+                    pass
 
-            #print(x_obj, y_obj)
+            cv2.imshow('Frame', drawing)
 
-        #filter
-        #filter
-    
+            sframe += 1
+            fps.update()
+            # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+            out.write(drawing)
+
+            keyboard = cv2.waitKey(30)
+            if keyboard == ord('q') or keyboard == 27:
+                fps.stop()
+                break
+
+        print('x_obj: {}'.format(x_obj))
+        print('y_obj: {}'.format(y_obj))
+
+        self.kf(x_obj,y_obj)
+
     pass
 class resultVid(FloatLayout): #pop4
     pass

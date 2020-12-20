@@ -671,7 +671,8 @@
             text: "...v0.0...dd/mm/yy..."
 <chooseSet>:
     containerr : containerr
-    on_pre_enter:root.pulldata()
+    container_gb : container_gb
+    on_pre_enter: root.pulldata()
     BoxLayout:
         padding: [2,2,2,10]
         spacing: 2
@@ -679,8 +680,23 @@
         BoxLayout:
             padding: [2,2,2,10]
             spacing: 2
-            orientation: 'vertical'
-            id: containerr
+            orientation: 'horizontal'
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                id: containerr
+            BoxLayout:
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
+                id: container_gb
+        Button:
+            pos_hint: {'center_x': .5, 'center_y': .8}
+            size_hint: None, None
+            size: 150,20
+            text: "Delete"
+            on_press: 
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
