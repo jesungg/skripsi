@@ -101,6 +101,8 @@ class chooseSet(Screen): #3
                 print('json_obj',json_obj)
                 namaset = json_obj['namaset']
                 print('namaset', namaset)
+                createBtn = ToggleButton(text=namaset)
+                self.ids.containerr.add_widget(createBtn)
             #harus string string akses dictnya
             # print(data['3']['namaset'])
             # bykbtn = 0
