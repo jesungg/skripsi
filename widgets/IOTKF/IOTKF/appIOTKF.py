@@ -269,6 +269,8 @@ class newSet(Screen): #4
                 data.append({
                     'id': in_id,
                     'namaset': setName,
+                    'video_path': store.get('video_data')['video_path'],
+                    'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
                     'ncod': nCode,
                     'acts': d_act
@@ -282,6 +284,8 @@ class newSet(Screen): #4
                 d_setting = {
                     'id': 1,
                     'namaset': setName,
+                    'video_path': store.get('video_data')['video_path'],
+                    'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
                     'ncod': nCode,
                     'acts': d_act

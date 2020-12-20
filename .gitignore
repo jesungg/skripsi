@@ -5,3 +5,4 @@ lib/
 include/
 env/
 storage.json
+data.json
