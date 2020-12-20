@@ -666,7 +666,8 @@
             font_size: 10
             text: "...v0.0...dd/mm/yy..."
 <chooseSet>:
-    on_enter:root.pulldata()
+    containerr : containerr
+    on_pre_enter:root.pulldata()
     BoxLayout:
         padding: [2,2,2,10]
         spacing: 2
@@ -675,6 +676,7 @@
             padding: [2,2,2,10]
             spacing: 2
             orientation: 'vertical'
+            id: containerr
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None

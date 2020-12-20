@@ -1,20 +1,21 @@
 #other lib
 import json
 import os
+from idlelib.window import add_windows_to_menu
 from pdb import run
 
 import cv2
 import imutils
 import kivy
 import numpy as np
+#from docutils.nodes import container
+#from Cython.Shadow import pointer
 #from Cython.Compiler.Naming import self_cname
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.properties import ObjectProperty
-#uix lib
-from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
@@ -22,6 +23,9 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
+#uix lib
+from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
+
 #from pylint import message
 
 kivy.require('1.11.1')
@@ -83,30 +87,66 @@ class selVidScr(Screen): #2
     
 
 class chooseSet(Screen): #3
-    data={}
     def pulldata(self):
         try:
             data=newSet().openJson()
-            #print(data)
-            #print(data['1']['namaset'])
-            #atas ini udh oke
-            #ih bego jgn pake dict[n], dia return nya smua dicnya 
-            # weeehhhh, l
-            # u kan cuman mau n nya weh 
-            if data is None:
-                print('no data')
-            if data is not None:
-                print('ada data')
-                for n in range(len(data)):
-                    pointer=str(n+1)
-                    print(data[pointer],(data[pointer]["namaset"]) )
-                    self.add_widget(ToggleButton(id=data[pointer], text=data[pointer]+" "+data[pointer]["namaset"]))
-                    if self.ids.data[pointer].state=='down':
-                        pass
-                    else:
-                        pass
-            else:
-                print('no data')
+            data_keys = data.keys()
+            data_len = len(data_keys)
+            loopdata = data_len-1
+            for i in range(loopdata):
+                a = str(i+1)
+                b = 'namaset'
+                c = data[a][b]
+                createBtn = Button(text=c,font_size=12)
+                self.ids.containerr.add_widget(createBtn)
+                print(data[a][b])
+            print(data_keys)
+            print(len(data_keys))
+            print('highlite')
+            #harus string string akses dictnya
+            # print(data['3']['namaset'])
+            # bykbtn = 0
+            # if bykbtn == data_keys:
+            #     print('stop woy')
+            # for key in data_keys:
+            #     if bykbtn == data_keys:
+            #         print('stop woy')
+            #         break
+            #     keynya = data[bykbtn]['namaset']
+            #     #print(keynya)
+            #     createBtn = Button(text=keynya,font_size=12)
+            #     self.ids.containerr.add_widget(createBtn)
+            #     bykbtn=bykbtn+1
+
+
+            # for key in data :
+            #     print (key,len(data))
+
+
+            # for n in range(len(data)):
+            #     if data is None:
+            #         print('no data')
+            #     else:
+            #         print('ada data')
+            #         try:
+            #             print('n=',n)   
+            #             print('len=',len(data))
+            #             poin=str(n+1)
+            #             nama = data[poin]["namaset"]
+            #             print('isi=',poin,nama)
+            #             self.ids.containerr.add_widget(Button(text='nama', font_size=12))
+            #             print("add W")
+            #             n=n+1
+            #             print('incr')
+            #             if n == len(data):
+            #                 break
+            #         except Exception as e:
+            #             print(e)
+            #         # if self.ids.poin.state=='down':
+            #         #     print('choosen')
+            #         #     pass
+            #         # else:
+            #         #     pass
         except Exception as e:
             print(e)
 
@@ -149,12 +189,12 @@ class newSet(Screen): #4
         f = open('/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/res/data.json',)
         data = json.load(f)
         print('you did it')
+        #print(data)
         return data
         
     def get_variables(self):
-        data = {}
         try:
-            self.openJson()
+            data=self.openJson()
         except Exception as e:
             print (e)
 
@@ -227,19 +267,27 @@ class newSet(Screen): #4
                 'a10':{'name':a10name ,'x0':a10x0 ,'y0':a10y0 ,'x1':a10x1 ,'y1':a10y1}}
         
         if data is not None:
+            print(data)
+            print('data is not none')
             n_data = len(data)
             in_id = n_data+1
-            d_setting = {in_id:{'namaset': setName,
+            print(n_data,in_id)
+            data[in_id]= {'namaset': setName,
                             'nloc': nLoc,
                             'ncod': nCode,
-                            'acts': d_act}}
-            self.writeJson(d_setting)
+                            'acts': d_act}
+            print(data)
+            self.writeJson(data)
+            print('done write',data)
         else:
+            print('data is none')
+            print(data)
             d_setting = {1:{'namaset': setName,
                             'nloc': nLoc,
                             'ncod': nCode,
                             'acts': d_act}}
             self.writeJson(d_setting)
+            print(data)
         
         print (nLoc,nCode)
         
