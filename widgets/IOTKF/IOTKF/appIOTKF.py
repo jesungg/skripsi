@@ -360,10 +360,16 @@ class resultScr(Screen): #6
                     break
             if isValid:
                 print('valid', ax['name'])
-                out.append(ax['name'])
-
+                action = ax['name']
+                out.append(action)
         data_file[self.config_id]['output']['desc'] = out
         newSet().writeJson(data_file)
+        for i in range(len(out)):
+            action = out[i]
+            label = Label(text=action)
+            self.ids.result_box.add_widget(label)
+
+
 
 
     def draw_kf(self,x_kf,y_kf):

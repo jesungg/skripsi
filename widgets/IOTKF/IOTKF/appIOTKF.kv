@@ -708,6 +708,7 @@
             text: "...v0.0...dd/mm/yy..."
 <resultScr>:
     on_pre_enter: root.lokasi_obj()
+    on_pre_leave: result_box.clear_widgets()
     BoxLayout:
         padding: [2,2,2,10]
         spacing: 2
@@ -718,7 +719,11 @@
             orientation: 'horizontal'
             Image:
                 id: result_img
-                # source: 'sampeltest.png'
+            BoxLayout:
+                id: result_box
+                padding: [2,2,2,10]
+                spacing: 2
+                orientation: 'vertical'
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
