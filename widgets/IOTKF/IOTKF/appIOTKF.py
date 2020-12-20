@@ -1,23 +1,21 @@
 #other lib
+import argparse
 import json
 import os
-# from idlelib.window import add_windows_to_menu
-from pdb import run
+import time
 
 import cv2
 import imutils
 import kivy
-from kivy.properties import ObjectProperty
 import numpy as np
-#from docutils.nodes import container
-#from Cython.Shadow import pointer
-#from Cython.Compiler.Naming import self_cname
+from imutils.feature.factories import is_cv2
+from imutils.video import FPS, VideoStream
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.lang import Builder
-#uix lib
-from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
+from kivy.properties import ObjectProperty
+from kivy.storage.jsonstore import JsonStore
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
@@ -26,8 +24,9 @@ from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 #uix lib
+#uix lib
 from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
-from kivy.storage.jsonstore import JsonStore
+from numpy import ndarray
 
 store = JsonStore('storage.json')
 
@@ -308,6 +307,109 @@ class addAct(FloatLayout): #pop3
 class loadingScr(Screen): #5
     pass
 class resultScr(Screen): #6
+    #object detection
+    def titiktengah(self,kontur):
+        M = cv2.moments(kontur)
+        x = int(M['m10']/M['m00'])
+        y = int(M['m01']/M['m00'])
+        return x, y
+
+    def lokasi_obj(self):
+        fwidth = None
+        fheight = None
+        nframe = 30
+        sframe = 0
+
+        phase1 = True
+        phase2 = False
+
+        x_obj = []
+        y_obj = []
+
+        font                   = cv2.FONT_HERSHEY_SIMPLEX
+        bottomLeftCornerOfText = (10,500)
+        fontScale              = 1
+        fontColor              = (255,255,255)
+        lineType               = 2
+
+        kernel = np.ones((5,5),np.uint8)
+        vid_path = store.get('video_data')['video_path']
+        cap = cv2.VideoCapture(vid_path)
+        fps =  FPS().start()
+        #frame_width = int(cap.get(3))
+        frame_height = int(cap.get(4))
+        ret, frame = cap.read()
+        try:
+            out = cv2.VideoWriter('outpy.avi',cv2.VideoWriter_fourcc('M','J','P','G'), 20, (600,337))
+        except:
+            pass
+
+        if frame is None:
+                fps.stop()
+        else:
+            fps.update()
+            try:   
+                frame = imutils.resize(frame, width=600)
+                (aw, ah, ac) = frame.shape
+            except Exception as e:
+                print('frame resize error',e)
+                pass
+            
+            if sframe % nframe == 0 :
+                bgsub = cv2.createBackgroundSubtractorMOG2()
+                fgmask = bgsub.apply(frame)
+                gblur = cv2.GaussianBlur(fgmask, (11,11), 0)
+                erosion = cv2.erode(fgmask,kernel,iterations = 1)
+                dilation = cv2.dilate(erosion,kernel,iterations = 1)
+                closing = cv2.morphologyEx(dilation, cv2.MORPH_CLOSE, kernel)
+                contours, _ = cv2.findContours(closing, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+                for contour in contours:
+                    (x,y,w,h) = cv2.boundingRect(contour)
+                    cont_h = y+h
+                    cont_w = x+w
+                    if cv2.contourArea(contour) < 750:
+                        continue
+                    if cont_h < 200 :
+                        continue
+                    hull = cv2.convexHull(contour)
+                    cv2.drawContours(frame, [hull], -1, (255, 0, 0), 2)
+                    cv2.rectangle(frame, (x,y),(cont_w, cont_h), (0,255,0), 2)
+                    
+                    contSize = len(contour) #semua piksel sebuah kontur
+                    contNum = len(contours) #semua kontur dan semua pikselnya
+                    if contNum > 1:
+                        print('lebih dr 1')
+                        for i in range(contNum):
+                            try:
+                                cx, cy = self.titiktengah(hull)
+                                if cx[i] == cx[i+1]:
+                                    if cy[i] == cy[i+1]:
+                                        pass
+                                    pass
+                            except:
+                                pass
+                            i = i+1
+                        x_obj.append(cx)
+                        y_obj.append(cy)
+                        #print(cx,cy)
+                        #print(x_obj,y_obj)
+                    else:
+                        print('satu')
+                        cx, cy = self.titiktengah(hull)
+                        x_obj.append(cx)
+                        y_obj.append(cy)
+
+                sframe += 1
+                fps.update()
+                # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
+                out.write(frame)
+
+            #print(x_obj, y_obj)
+
+        #filter
+        #filter
+    
     pass
 class resultVid(FloatLayout): #pop4
     pass
