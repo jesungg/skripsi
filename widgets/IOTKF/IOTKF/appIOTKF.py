@@ -23,6 +23,8 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.image import Image
+from kivy.uix.label import Label
 #uix lib
 #uix lib
 from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
@@ -100,59 +102,49 @@ class selVidScr(Screen): #2
     
 
 class chooseSet(Screen): #3
+    def on_state(self, widget, value):
+        if value == 'down':
+            data_list = newSet().openJson()
+            curr_config = {}
+            # cari config di json
+            for obj in data_list:
+                if obj['namaset'] == widget.text:
+                    curr_config = obj
+                    self.config_id = curr_config['id']
+            img = Image(source=curr_config['capture_path'])
+            self.ids.container_gb.clear_widgets()
+            self.ids.container_gb.add_widget(img)
+        if value == 'normal':
+            self.ids.container_gb.clear_widgets()
+        # print('self', self)
+        # print('widget',widget.text)
+        # print('value',value)
+        # print('========')
+
+    def handle_delete(self):
+        if self.config_id is not None :
+            data_list = newSet().openJson()
+            data_list[self.config_id]['is_delete'] = 'true'
+            newSet().writeJson(data_list)
+            self.pulldata()
+
     def pulldata(self):
         try:
+            self.ids.containerr.clear_widgets()
+            self.ids.container_gb.clear_widgets()
             data=newSet().openJson()
             for json_obj in data:
-                print('json_obj',json_obj)
-                namaset = json_obj['namaset']
-                print('namaset', namaset)
-                createBtn = ToggleButton(text=namaset)
-                self.ids.containerr.add_widget(createBtn)
-            #harus string string akses dictnya
-            # print(data['3']['namaset'])
-            # bykbtn = 0
-            # if bykbtn == data_keys:
-            #     print('stop woy')
-            # for key in data_keys:
-            #     if bykbtn == data_keys:
-            #         print('stop woy')
-            #         break
-            #     keynya = data[bykbtn]['namaset']
-            #     #print(keynya)
-            #     createBtn = Button(text=keynya,font_size=12)
-            #     self.ids.containerr.add_widget(createBtn)
-            #     bykbtn=bykbtn+1
-
-
-            # for key in data :
-            #     print (key,len(data))
-
-
-            # for n in range(len(data)):
-            #     if data is None:
-            #         print('no data')
-            #     else:
-            #         print('ada data')
-            #         try:
-            #             print('n=',n)   
-            #             print('len=',len(data))
-            #             poin=str(n+1)
-            #             nama = data[poin]["namaset"]
-            #             print('isi=',poin,nama)
-            #             self.ids.containerr.add_widget(Button(text='nama', font_size=12))
-            #             print("add W")
-            #             n=n+1
-            #             print('incr')
-            #             if n == len(data):
-            #                 break
-            #         except Exception as e:
-            #             print(e)
-            #         # if self.ids.poin.state=='down':
-            #         #     print('choosen')
-            #         #     pass
-            #         # else:
-            #         #     pass
+                if json_obj['is_delete'] == 'false':
+                    # print('json_obj',json_obj)
+                    namaset = json_obj['namaset']
+                    # print('namaset', namaset)
+                    create_btn = ToggleButton(text=namaset, group="config")
+                    create_btn.bind(state=self.on_state)
+                    self.ids.containerr.add_widget(create_btn)
+            if len(self.ids.containerr.children) == 0:
+                # handle empty config
+                empty_config_label = Label(text="no config available")
+                self.ids.containerr.add_widget(empty_config_label)
         except Exception as e:
             print('[ERROR] chooseSet open JSON',e)
 
@@ -277,6 +269,7 @@ class newSet(Screen): #4
                 data.append({
                     'id': in_id,
                     'namaset': setName,
+                    'is_delete': 'false',
                     'video_path': store.get('video_data')['video_path'],
                     'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
@@ -292,6 +285,7 @@ class newSet(Screen): #4
                 d_setting = {
                     'id': 1,
                     'namaset': setName,
+                    'is_delete': 'false',
                     'video_path': store.get('video_data')['video_path'],
                     'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
@@ -558,7 +552,7 @@ class resultScr(Screen): #6
 
                 contNum = len(contours) #semua kontur dan semua pikselnya
                 hull_list = []
-                
+
                 for i in range(contNum):
                     (x,y,w,h) = cv2.boundingRect(contours[i]) #kotakin, balikin nilai koornya
                     #in piksel
