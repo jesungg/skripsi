@@ -7,6 +7,7 @@ from pdb import run
 import cv2
 import imutils
 import kivy
+from kivy.properties import ObjectProperty
 import numpy as np
 #from docutils.nodes import container
 #from Cython.Shadow import pointer
@@ -15,7 +16,8 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.factory import Factory
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty
+#uix lib
+from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
@@ -41,7 +43,7 @@ stringnya =  None
 
 #kv filepath
 Window.size = (800, 800)
-kv = Builder.load_file("appIOTKF.kv")
+# kv = Builder.load_file("appIOTKF.kv")
 
 #8 screen, 4 popup
 #all screen -> pass (if empty as placeholder)
