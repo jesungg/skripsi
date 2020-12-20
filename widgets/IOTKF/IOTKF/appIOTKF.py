@@ -315,6 +315,30 @@ class loadingScr(Screen): #5
     pass
 class resultScr(Screen): #6
     config_id = None
+    # displayed_img = None
+    def draw_kf(self,x_kf,y_kf):
+        try:
+            gbr = cv2.imread(store.get('image_data')['capture_path'])
+            gbr = imutils.resize(gbr,width=600)
+            for i in range(len(x_kf)):
+                x_kf[i] = int(x_kf[i])
+                y_kf[i] = int(y_kf[i])
+            
+            for i in range(len(x_kf)-1):
+                cv2.line(
+                    gbr,
+                    (x_kf[i],y_kf[i]),
+                    (x_kf[i+1],y_kf[i+1]),
+                    (0,0,255),
+                    2
+                )
+            
+            cv2.imwrite("temp_result.png", gbr)
+
+
+        except Exception as e:
+            print("[ERROR] draw_kf",e)
+
     def kf(self,x_obj,y_obj):
         #list posisi objek
         pos_x = x_obj
@@ -499,6 +523,9 @@ class resultScr(Screen): #6
             'kf_vy': kf_res_vy,
             'guess_noise': .9
         }
+        self.draw_kf(kf_res_x, kf_res_y)
+        self.ids.result_img.source = 'temp_result.png'
+
         return out
 
     #object detection
@@ -645,8 +672,8 @@ class resultScr(Screen): #6
                 except:
                     pass
 
-            cv2.imshow('Frame', drawing)
-
+            # cv2.imshow('Frame', drawing)
+            # self.ids.result_img.source = drawing
             sframe += 1
             fps.update()
             # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
@@ -672,7 +699,6 @@ class resultScr(Screen): #6
         data_list[self.config_id] = config
         newSet().writeJson(data_list)
         # =============== end save
-
     pass
 class resultVid(FloatLayout): #pop4
     pass
