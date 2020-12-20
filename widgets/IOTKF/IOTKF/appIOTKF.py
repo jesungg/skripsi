@@ -178,8 +178,6 @@ class newSet(Screen): #4
         cv2.imshow("image", img)
         # #calling the mouse click event
         cv2.setMouseCallback("image", click_event)
-        if cv2.waitKey(0) == 27:  # if key 'q' is pressed 
-            cv2.destroyWindow("image")
 
     def writeJson(self,payload):
         with open("widgets/IOTKF/IOTKF/res/data.json", "w") as outfile: 
