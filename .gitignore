@@ -5,3 +5,5 @@ lib/
 include/
 env/
 outpy.avi
+storage.json
+data.json

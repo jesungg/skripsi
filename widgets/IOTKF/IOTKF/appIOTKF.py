@@ -177,8 +177,6 @@ class newSet(Screen): #4
         cv2.imshow("image", img)
         # #calling the mouse click event
         cv2.setMouseCallback("image", click_event)
-        if cv2.waitKey(0) == 27:  # if key 'q' is pressed 
-            cv2.destroyWindow("image")
 
     def writeJson(self,payload):
         with open("widgets/IOTKF/IOTKF/res/data.json", "w") as outfile: 
@@ -270,6 +268,8 @@ class newSet(Screen): #4
                 data.append({
                     'id': in_id,
                     'namaset': setName,
+                    'video_path': store.get('video_data')['video_path'],
+                    'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
                     'ncod': nCode,
                     'acts': d_act
@@ -283,6 +283,8 @@ class newSet(Screen): #4
                 d_setting = {
                     'id': 1,
                     'namaset': setName,
+                    'video_path': store.get('video_data')['video_path'],
+                    'capture_path': store.get('image_data')['capture_path'],
                     'nloc': nLoc,
                     'ncod': nCode,
                     'acts': d_act
@@ -301,7 +303,7 @@ class cNoise(FloatLayout): #pop2
 class addAct(FloatLayout): #pop3
     pass
 class loadingScr(Screen): #5
-     pass
+    pass
 class resultScr(Screen): #6
     #object detection
     def titiktengah(self,kontur):
