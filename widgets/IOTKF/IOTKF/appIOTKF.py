@@ -316,6 +316,56 @@ class loadingScr(Screen): #5
 class resultScr(Screen): #6
     config_id = None
     # displayed_img = None
+    def write_desc(self):
+        data_file = newSet().openJson()
+        config = data_file[self.config_id]
+        acts = config['acts']
+        kalman_filter = config['output']['kalman_filter']
+        kfx = kalman_filter['kf_x']
+        kfy = kalman_filter['kf_y']
+        to_evaluate = {}
+        out = []
+        for key in acts.keys():
+            is_evaluated = True
+            ax = acts[key]
+            for value in ax.values():
+                if value == '':
+                    is_evaluated = False
+                    break
+            if is_evaluated:
+                to_evaluate[key] = ax
+        print('after filtered',to_evaluate)
+
+        for key in to_evaluate.keys():
+            ax = to_evaluate[key]
+            x0 = int(ax['x0'])
+            y0 = int(ax['y0'])
+            x1 = int(ax['x1'])
+            y1 = int(ax['y1'])
+            isValid = False
+            print()
+            print('ax nya', ax)
+            for i in range(len(kfx)):
+                print()
+                cx = int(kfx[i])
+                cy = int(kfy[i])
+                print('cx: {}, cy: {}'.format(cx,cy))
+                if x0 <= cx <= x1:
+                    print("valid")
+                    isValid = True
+                    break
+                if y0 <= cy <= y1:
+                    print("valid")
+                    isValid = True
+                    break
+            if isValid:
+                print('valid', ax['name'])
+                out.append(ax['name'])
+
+        data_file[self.config_id]['output']['desc'] = out
+        newSet().writeJson(data_file)
+
+
     def draw_kf(self,x_kf,y_kf):
         try:
             gbr = cv2.imread(store.get('image_data')['capture_path'])
@@ -323,7 +373,7 @@ class resultScr(Screen): #6
             for i in range(len(x_kf)):
                 x_kf[i] = int(x_kf[i])
                 y_kf[i] = int(y_kf[i])
-            
+
             for i in range(len(x_kf)-1):
                 cv2.line(
                     gbr,
@@ -332,7 +382,7 @@ class resultScr(Screen): #6
                     (0,0,255),
                     2
                 )
-            
+
             cv2.imwrite("temp_result.png", gbr)
 
 
@@ -627,8 +677,12 @@ class resultScr(Screen): #6
                     noise_lc = config['nloc']
 
                     # set default nlc
-                    if noise_lc == "" or noise_lc < 0:
+                    if noise_lc == "":
                         noise_lc = 0
+                    else:
+                        noise_lc = int(noise_lc)
+                    if noise_lc < 0 :
+                        noice_lc = 0
 
                     if noise_cd =='HT':
                         if cy < noise_lc:
@@ -687,7 +741,6 @@ class resultScr(Screen): #6
         print('x_obj: {}'.format(x_obj))
         print('y_obj: {}'.format(y_obj))
         out_kf = self.kf(x_obj,y_obj)
-
         # save ke json
         config['output'] = {
             'object_detection': {
@@ -698,6 +751,8 @@ class resultScr(Screen): #6
         }
         data_list[self.config_id] = config
         newSet().writeJson(data_list)
+        self.write_desc()
+
         # =============== end save
     pass
 class resultVid(FloatLayout): #pop4
