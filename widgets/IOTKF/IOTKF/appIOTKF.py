@@ -3,19 +3,13 @@ import argparse
 import json
 import os
 import time
-# from idlelib.window import add_windows_to_menu
-from pdb import run
 
 import cv2
 import imutils
 import kivy
 import numpy as np
-#from Cython.Compiler.Naming import self_cname
 from imutils.feature.factories import is_cv2
 from imutils.video import FPS, VideoStream
-#from docutils.nodes import container
-#from Cython.Shadow import pointer
-#from Cython.Compiler.Naming import self_cname
 from kivy.app import App
 from kivy.core.window import Window
 from kivy.factory import Factory
