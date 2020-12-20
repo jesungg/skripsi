@@ -82,8 +82,8 @@ class selVidScr(Screen): #2
         stringnya = str(filepath)
         stringnya = stringnya[2:-2]
         acceptedformat = 'mp4'
-        print('stringnya', stringnya, type(stringnya), acceptedformat)
-        print(stringnya[-3:])
+        # print('stringnya', stringnya, type(stringnya), acceptedformat)
+        # print(stringnya[-3:])
         store.put('video_data',video_path=stringnya)
         if stringnya[-3:] == acceptedformat:
             print("acceptedformat")
@@ -102,6 +102,7 @@ class selVidScr(Screen): #2
     
 
 class chooseSet(Screen): #3
+    config_id = None
     def on_state(self, widget, value):
         if value == 'down':
             data_list = newSet().openJson()
@@ -147,6 +148,11 @@ class chooseSet(Screen): #3
                 self.ids.containerr.add_widget(empty_config_label)
         except Exception as e:
             print('[ERROR] chooseSet open JSON',e)
+
+    def handleNext(self, sm):
+        if self.config_id is not None:
+            store.put('config_data',selected_config_id=self.config_id)
+            sm.current = 'result_scr'
 
 class newSet(Screen): #4
     def show_coor(self):
@@ -308,6 +314,7 @@ class addAct(FloatLayout): #pop3
 class loadingScr(Screen): #5
     pass
 class resultScr(Screen): #6
+    config_id = None
     def kf(self,x_obj,y_obj):
         #list posisi objek
         pos_x = x_obj
@@ -321,8 +328,8 @@ class resultScr(Screen): #6
             vel_list = [0.]
             for i in range(len(alist)):
                 j = i+1
-                print(i)
-                print(alist[i])
+                # print(i)
+                # print(alist[i])
                 try:
                     vel_list.append(alist[j] - alist[i])
                 except:
@@ -479,11 +486,20 @@ class resultScr(Screen): #6
             #print('predict')
             #print(f.x)
 
-        print(kf_res_x,kf_res_y,kf_res_vx,kf_res_vy)
-        b=.9*((var_vy)**2)
-        print(b)
-        print(var_x,var_y,var_vx,var_vy)
-        print(f.R)
+        # print(kf_res_x,kf_res_y,kf_res_vx,kf_res_vy)
+        guess_noise=.9*((var_vy)**2)
+        # print(guess_noise)
+        # print(var_x,var_y,var_vx,var_vy)
+        # print(f.R)
+        out = {
+            'f_R': f.R.tolist(),
+            'kf_x': kf_res_x,
+            'kf_y': kf_res_y,
+            'kf_vx': kf_res_vx,
+            'kf_vy': kf_res_vy,
+            'guess_noise': .9
+        }
+        return out
 
     #object detection
     def titiktengah(self, kontur):
@@ -493,6 +509,14 @@ class resultScr(Screen): #6
         return x, y
 
     def lokasi_obj(self):
+        self.config_id = store.get('config_data')['selected_config_id']
+        # print('ada gak?', self.config_id)
+        config = {}
+        if self.config_id is not None:
+            data_list = newSet().openJson()
+            config = data_list[self.config_id]
+        else:
+            print("[ERROR!] NO CONFIG ID")
         fwidth = None
         fheight = None
         nframe = 30
@@ -572,6 +596,12 @@ class resultScr(Screen): #6
                     drawing = np.zeros((closing.shape[0], closing.shape[1], 3), dtype=np.uint8)
                     #ambil centroid & ilangin duplikat
                     cx, cy = self.titiktengah(hull)
+                    noise_cd = config['ncod'].upper()
+                    noise_lc = config['nloc']
+
+                    # set default nlc
+                    if noise_lc == "" or noise_lc < 0:
+                        noise_lc = 0
 
                     if noise_cd =='HT':
                         if cy < noise_lc:
@@ -626,11 +656,22 @@ class resultScr(Screen): #6
             if keyboard == ord('q') or keyboard == 27:
                 fps.stop()
                 break
-
+        print('saving x and y obj')
         print('x_obj: {}'.format(x_obj))
         print('y_obj: {}'.format(y_obj))
+        out_kf = self.kf(x_obj,y_obj)
 
-        self.kf(x_obj,y_obj)
+        # save ke json
+        config['output'] = {
+            'object_detection': {
+                'x_obj': x_obj,
+                'y_obj': y_obj
+            },
+            'kalman_filter': out_kf
+        }
+        data_list[self.config_id] = config
+        newSet().writeJson(data_list)
+        # =============== end save
 
     pass
 class resultVid(FloatLayout): #pop4
