@@ -1,7 +1,7 @@
 #other lib
 import json
 import os
-from idlelib.window import add_windows_to_menu
+# from idlelib.window import add_windows_to_menu
 from pdb import run
 
 import cv2
@@ -27,6 +27,9 @@ from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
 #uix lib
 from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
+from kivy.storage.jsonstore import JsonStore
+
+store = JsonStore('storage.json')
 
 #from pylint import message
 
@@ -39,7 +42,6 @@ kivy.require('1.11.1')
 #other file
 
 #dictionaries
-stringnya =  None
 
 #kv filepath
 Window.size = (800, 800)
@@ -60,10 +62,12 @@ class selVidScr(Screen): #2
         #print("close popup")
         self._popup.dismiss()
     def getImg(self,fileloc):
+        IMG_SAVE_PATH = "widgets/IOTKF/IOTKF/res/first_frame.png"
         vidcap = cv2.VideoCapture(fileloc)
         success, image = vidcap.read()
         if success:
-            cv2.imwrite("widgets/IOTKF/IOTKF/res/first_frame.png", image)  # save frame as JPEG file
+            store.put('image_data',capture_path=IMG_SAVE_PATH)
+            cv2.imwrite(IMG_SAVE_PATH, image)  # save frame as JPEG file
     def select(self, dirpath, filepath):
         #print('path', dirpath,type(dirpath))
         #print('filename', filepath, type(filepath))
@@ -72,6 +76,7 @@ class selVidScr(Screen): #2
         acceptedformat = 'mp4'
         print('stringnya', stringnya, type(stringnya), acceptedformat)
         print(stringnya[-3:])
+        store.put('video_data',video_path=stringnya)
         if stringnya[-3:] == acceptedformat:
             print("acceptedformat")
             self.getImg(fileloc=stringnya)
@@ -154,6 +159,8 @@ class chooseSet(Screen): #3
 
 class newSet(Screen): #4
     def show_coor(self):
+        capture_path = store.get('image_data')['capture_path']
+        print('stringnya',capture_path)
         events = [i for i in dir(cv2) if 'EVENT' in i]
         print(events)
         refPt = []
@@ -175,7 +182,7 @@ class newSet(Screen): #4
                 cv2.imshow("image", img)
         #Here, you need to change the image name and it's path according to your directory
         font = cv2.FONT_HERSHEY_SIMPLEX
-        img = cv2.imread("/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/res/first_frame.png")
+        img = cv2.imread(capture_path)
         img = imutils.resize(img, width=600)
         cv2.imshow("image", img)
         # #calling the mouse click event
@@ -184,11 +191,11 @@ class newSet(Screen): #4
             cv2.destroyWindow("image")
     
     def writeJson(self,dict):
-        with open("/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/res/data.json", "w") as outfile: 
+        with open("widgets/IOTKF/IOTKF/res/data.json", "w") as outfile: 
             json.dump(dict, outfile) 
 
     def openJson(self):
-        f = open('/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/res/data.json',)
+        f = open('widgets/IOTKF/IOTKF/res/data.json',)
         data = json.load(f)
         print('you did it')
         #print(data)
