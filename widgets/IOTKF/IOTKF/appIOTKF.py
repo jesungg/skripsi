@@ -97,19 +97,10 @@ class chooseSet(Screen): #3
     def pulldata(self):
         try:
             data=newSet().openJson()
-            data_keys = data.keys()
-            data_len = len(data_keys)
-            loopdata = data_len-1
-            for i in range(loopdata):
-                a = str(i+1)
-                b = 'namaset'
-                c = data[a][b]
-                createBtn = Button(text=c,font_size=12)
-                self.ids.containerr.add_widget(createBtn)
-                print(data[a][b])
-            print(data_keys)
-            print(len(data_keys))
-            print('highlite')
+            for json_obj in data:
+                print('json_obj',json_obj)
+                namaset = json_obj['namaset']
+                print('namaset', namaset)
             #harus string string akses dictnya
             # print(data['3']['namaset'])
             # bykbtn = 0
@@ -155,7 +146,7 @@ class chooseSet(Screen): #3
             #         # else:
             #         #     pass
         except Exception as e:
-            print(e)
+            print('[ERROR] chooseSet open JSON',e)
 
 class newSet(Screen): #4
     def show_coor(self):
@@ -189,120 +180,123 @@ class newSet(Screen): #4
         cv2.setMouseCallback("image", click_event)
         if cv2.waitKey(0) == 27:  # if key 'q' is pressed 
             cv2.destroyWindow("image")
-    
-    def writeJson(self,dict):
+
+    def writeJson(self,payload):
         with open("widgets/IOTKF/IOTKF/res/data.json", "w") as outfile: 
-            json.dump(dict, outfile) 
+            json.dump({"data":payload}, outfile) 
 
     def openJson(self):
-        f = open('widgets/IOTKF/IOTKF/res/data.json',)
-        data = json.load(f)
+        f = open('widgets/IOTKF/IOTKF/res/data.json')
+        data = json.load(f)['data']
         print('you did it')
         #print(data)
         return data
-        
+
     def get_variables(self):
         try:
             data=self.openJson()
+            setName = self.ids.setup_name.text
+            nLoc = self.ids.noise_loc.text
+            nCode = self.ids.noise_code.text
+
+            a1name = self.ids.a1nem.text
+            a2name = self.ids.a2nem.text
+            a3name = self.ids.a3nem.text
+            a4name = self.ids.a4nem.text
+            a5name = self.ids.a5nem.text
+            a6name = self.ids.a6nem.text
+            a7name = self.ids.a7nem.text
+            a8name = self.ids.a8nem.text
+            a9name = self.ids.a9nem.text
+            a10name = self.ids.a10nem.text
+
+            a1x0 = self.ids.a1xnol.text
+            a2x0 = self.ids.a2xnol.text
+            a3x0 = self.ids.a3xnol.text
+            a4x0 = self.ids.a4xnol.text
+            a5x0 = self.ids.a5xnol.text
+            a6x0 = self.ids.a6xnol.text
+            a7x0 = self.ids.a7xnol.text
+            a8x0 = self.ids.a8xnol.text
+            a9x0 = self.ids.a9xnol.text
+            a10x0 = self.ids.a10xnol.text
+            a1y0 = self.ids.a1ynol.text
+            a2y0 = self.ids.a2ynol.text
+            a3y0 = self.ids.a3ynol.text
+            a4y0 = self.ids.a4ynol.text
+            a5y0 = self.ids.a5ynol.text
+            a6y0 = self.ids.a6ynol.text
+            a7y0 = self.ids.a7ynol.text
+            a8y0 = self.ids.a8ynol.text
+            a9y0 = self.ids.a9ynol.text
+            a10y0 = self.ids.a10ynol.text
+
+            a1x1 = self.ids.a1xsatu.text
+            a2x1 = self.ids.a2xsatu.text
+            a3x1 = self.ids.a3xsatu.text
+            a4x1 = self.ids.a4xsatu.text
+            a5x1 = self.ids.a5xsatu.text
+            a6x1 = self.ids.a6xsatu.text
+            a7x1 = self.ids.a7xsatu.text
+            a8x1 = self.ids.a8xsatu.text
+            a9x1 = self.ids.a9xsatu.text
+            a10x1 = self.ids.a10xsatu.text
+            a1y1 = self.ids.a1ysatu.text
+            a2y1 = self.ids.a2ysatu.text
+            a3y1 = self.ids.a3ysatu.text
+            a4y1 = self.ids.a4ysatu.text
+            a5y1 = self.ids.a5ysatu.text
+            a6y1 = self.ids.a6ysatu.text
+            a7y1 = self.ids.a7ysatu.text
+            a8y1 = self.ids.a8ysatu.text
+            a9y1 = self.ids.a9ysatu.text
+            a10y1 = self.ids.a10ysatu.text
+
+            d_act = {'a1':{'name':a1name ,'x0':a1x0 ,'y0':a1y0 ,'x1':a1x1 ,'y1':a1y1},
+                    'a2':{'name':a2name ,'x0':a2x0 ,'y0':a2y0 ,'x1':a2x1 ,'y1':a2y1},
+                    'a3':{'name':a3name ,'x0':a3x0 ,'y0':a3y0 ,'x1':a3x1 ,'y1':a3y1},
+                    'a4':{'name':a4name ,'x0':a4x0 ,'y0':a4y0 ,'x1':a4x1 ,'y1':a4y1},
+                    'a5':{'name':a5name ,'x0':a5x0 ,'y0':a5y0 ,'x1':a5x1 ,'y1':a5y1},
+                    'a6':{'name':a6name ,'x0':a6x0 ,'y0':a6y0 ,'x1':a6x1 ,'y1':a6y1},
+                    'a7':{'name':a7name ,'x0':a7x0 ,'y0':a7y0 ,'x1':a7x1 ,'y1':a7y1},
+                    'a8':{'name':a8name ,'x0':a8x0 ,'y0':a8y0 ,'x1':a8x1 ,'y1':a8y1},
+                    'a9':{'name':a9name ,'x0':a9x0 ,'y0':a9y0 ,'x1':a9x1 ,'y1':a9y1},
+                    'a10':{'name':a10name ,'x0':a10x0 ,'y0':a10y0 ,'x1':a10x1 ,'y1':a10y1}}
+
+            if data is not None:
+                print('data is not none',data)
+                n_data = len(data)
+                in_id = n_data
+                print('n_data: {}, in_id: {}'.format(n_data,in_id))
+                data.append({
+                    'id': in_id,
+                    'namaset': setName,
+                    'nloc': nLoc,
+                    'ncod': nCode,
+                    'acts': d_act
+                })
+                print(data)
+                self.writeJson(data)
+                print('done write',data)
+            else:
+                print('data is none', data)
+                new_data = []
+                d_setting = {
+                    'id': 1,
+                    'namaset': setName,
+                    'nloc': nLoc,
+                    'ncod': nCode,
+                    'acts': d_act
+                }
+                new_data.append(d_setting)
+                self.writeJson(new_data)
+                print(data)
+            print (nLoc,nCode)
         except Exception as e:
-            print (e)
+            print ('error open json',e)
 
-        setName = self.ids.setup_name.text
-        nLoc = self.ids.noise_loc.text
-        nCode = self.ids.noise_code.text
 
-        a1name = self.ids.a1nem.text
-        a2name = self.ids.a2nem.text
-        a3name = self.ids.a3nem.text
-        a4name = self.ids.a4nem.text
-        a5name = self.ids.a5nem.text
-        a6name = self.ids.a6nem.text
-        a7name = self.ids.a7nem.text
-        a8name = self.ids.a8nem.text
-        a9name = self.ids.a9nem.text
-        a10name = self.ids.a10nem.text
 
-        a1x0 = self.ids.a1xnol.text
-        a2x0 = self.ids.a2xnol.text
-        a3x0 = self.ids.a3xnol.text
-        a4x0 = self.ids.a4xnol.text
-        a5x0 = self.ids.a5xnol.text
-        a6x0 = self.ids.a6xnol.text
-        a7x0 = self.ids.a7xnol.text
-        a8x0 = self.ids.a8xnol.text
-        a9x0 = self.ids.a9xnol.text
-        a10x0 = self.ids.a10xnol.text
-        a1y0 = self.ids.a1ynol.text
-        a2y0 = self.ids.a2ynol.text
-        a3y0 = self.ids.a3ynol.text
-        a4y0 = self.ids.a4ynol.text
-        a5y0 = self.ids.a5ynol.text
-        a6y0 = self.ids.a6ynol.text
-        a7y0 = self.ids.a7ynol.text
-        a8y0 = self.ids.a8ynol.text
-        a9y0 = self.ids.a9ynol.text
-        a10y0 = self.ids.a10ynol.text
-
-        a1x1 = self.ids.a1xsatu.text
-        a2x1 = self.ids.a2xsatu.text
-        a3x1 = self.ids.a3xsatu.text
-        a4x1 = self.ids.a4xsatu.text
-        a5x1 = self.ids.a5xsatu.text
-        a6x1 = self.ids.a6xsatu.text
-        a7x1 = self.ids.a7xsatu.text
-        a8x1 = self.ids.a8xsatu.text
-        a9x1 = self.ids.a9xsatu.text
-        a10x1 = self.ids.a10xsatu.text
-        a1y1 = self.ids.a1ysatu.text
-        a2y1 = self.ids.a2ysatu.text
-        a3y1 = self.ids.a3ysatu.text
-        a4y1 = self.ids.a4ysatu.text
-        a5y1 = self.ids.a5ysatu.text
-        a6y1 = self.ids.a6ysatu.text
-        a7y1 = self.ids.a7ysatu.text
-        a8y1 = self.ids.a8ysatu.text
-        a9y1 = self.ids.a9ysatu.text
-        a10y1 = self.ids.a10ysatu.text
-
-        d_act = {'a1':{'name':a1name ,'x0':a1x0 ,'y0':a1y0 ,'x1':a1x1 ,'y1':a1y1},
-                'a2':{'name':a2name ,'x0':a2x0 ,'y0':a2y0 ,'x1':a2x1 ,'y1':a2y1},
-                'a3':{'name':a3name ,'x0':a3x0 ,'y0':a3y0 ,'x1':a3x1 ,'y1':a3y1},
-                'a4':{'name':a4name ,'x0':a4x0 ,'y0':a4y0 ,'x1':a4x1 ,'y1':a4y1},
-                'a5':{'name':a5name ,'x0':a5x0 ,'y0':a5y0 ,'x1':a5x1 ,'y1':a5y1},
-                'a6':{'name':a6name ,'x0':a6x0 ,'y0':a6y0 ,'x1':a6x1 ,'y1':a6y1},
-                'a7':{'name':a7name ,'x0':a7x0 ,'y0':a7y0 ,'x1':a7x1 ,'y1':a7y1},
-                'a8':{'name':a8name ,'x0':a8x0 ,'y0':a8y0 ,'x1':a8x1 ,'y1':a8y1},
-                'a9':{'name':a9name ,'x0':a9x0 ,'y0':a9y0 ,'x1':a9x1 ,'y1':a9y1},
-                'a10':{'name':a10name ,'x0':a10x0 ,'y0':a10y0 ,'x1':a10x1 ,'y1':a10y1}}
-        
-        if data is not None:
-            print(data)
-            print('data is not none')
-            n_data = len(data)
-            in_id = n_data+1
-            print(n_data,in_id)
-            data[in_id]= {'namaset': setName,
-                            'nloc': nLoc,
-                            'ncod': nCode,
-                            'acts': d_act}
-            print(data)
-            self.writeJson(data)
-            print('done write',data)
-        else:
-            print('data is none')
-            print(data)
-            d_setting = {1:{'namaset': setName,
-                            'nloc': nLoc,
-                            'ncod': nCode,
-                            'acts': d_act}}
-            self.writeJson(d_setting)
-            print(data)
-        
-        print (nLoc,nCode)
-        
-    
-
-    
 class cNoise(FloatLayout): #pop2
     pass
 class addAct(FloatLayout): #pop3
