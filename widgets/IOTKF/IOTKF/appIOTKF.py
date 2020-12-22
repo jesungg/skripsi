@@ -133,12 +133,14 @@ class chooseSet(Screen): #3
         try:
             self.ids.containerr.clear_widgets()
             self.ids.container_gb.clear_widgets()
+            print("clearwidget")
             data=newSet().openJson()
+            #print(data)
             for json_obj in data:
                 if json_obj['is_delete'] == 'false':
-                    # print('json_obj',json_obj)
+                    print('json_obj',json_obj)
                     namaset = json_obj['namaset']
-                    # print('namaset', namaset)
+                    print('namaset', namaset)
                     create_btn = ToggleButton(text=namaset, group="config")
                     create_btn.bind(state=self.on_state)
                     self.ids.containerr.add_widget(create_btn)
@@ -157,9 +159,9 @@ class chooseSet(Screen): #3
 class newSet(Screen): #4
     def show_coor(self):
         capture_path = store.get('image_data')['capture_path']
-        print('stringnya',capture_path)
+        #print('stringnya',capture_path)
         events = [i for i in dir(cv2) if 'EVENT' in i]
-        print(events)
+        #print(events)
         refPt = []
         def click_event(event, x, y, flags, param):
             if event == cv2.EVENT_LBUTTONDOWN:
@@ -268,10 +270,10 @@ class newSet(Screen): #4
                     'a10':{'name':a10name ,'x0':a10x0 ,'y0':a10y0 ,'x1':a10x1 ,'y1':a10y1}}
 
             if data is not None:
-                print('data is not none',data)
+                # print('data is not none',data)
                 n_data = len(data)
                 in_id = n_data
-                print('n_data: {}, in_id: {}'.format(n_data,in_id))
+                #print('n_data: {}, in_id: {}'.format(n_data,in_id))
                 data.append({
                     'id': in_id,
                     'namaset': setName,
@@ -282,7 +284,7 @@ class newSet(Screen): #4
                     'ncod': nCode,
                     'acts': d_act
                 })
-                print(data)
+                #print(data)
                 self.writeJson(data)
                 print('done write',data)
             else:
@@ -300,7 +302,7 @@ class newSet(Screen): #4
                 }
                 new_data.append(d_setting)
                 self.writeJson(new_data)
-                print(data)
+                #print(data)
             print (nLoc,nCode)
         except Exception as e:
             print ('error open json',e)
@@ -320,11 +322,15 @@ class resultScr(Screen): #6
         data_file = newSet().openJson()
         config = data_file[self.config_id]
         acts = config['acts']
+        get_seconds = config['output']['object_detection']
+        x_to_s = get_seconds['x_obj']
         kalman_filter = config['output']['kalman_filter']
         kfx = kalman_filter['kf_x']
         kfy = kalman_filter['kf_y']
         to_evaluate = {}
         out = []
+        # sekon = []
+        #buat filter data aksi kosong
         for key in acts.keys():
             is_evaluated = True
             ax = acts[key]
@@ -347,26 +353,42 @@ class resultScr(Screen): #6
             print('ax nya', ax)
             for i in range(len(kfx)):
                 print()
+                #start dr 0
+                #print(i)
                 cx = int(kfx[i])
                 cy = int(kfy[i])
                 print('cx: {}, cy: {}'.format(cx,cy))
                 if x0 <= cx <= x1:
-                    print("valid")
-                    isValid = True
+                    if y0 <= cy <= y1:
+                        # print('kf ke',i+1)
+                        # print('second ke',(i+1+3))
+                        # print(sekon)
+                        # print('aksi:',ax['name'])
+                        # print("valid")
+                        # sekon.append([int(i+1+3),ax['name']])
+                        isValid = True
+                        break
                     break
-                if y0 <= cy <= y1:
-                    print("valid")
-                    isValid = True
-                    break
+
             if isValid:
                 print('valid', ax['name'])
                 action = ax['name']
                 out.append(action)
+
         data_file[self.config_id]['output']['desc'] = out
         newSet().writeJson(data_file)
+        # for i in range(len(sekon)):
+        #     time_ = sekon[i][0]
+        #     act_ = sekon[i][1]
+        #     print(time_,act_)
+        #     action = str(act_) + " di detik ke-"+ str(time_)
+        #     label = Label(text=action)
+        #     self.ids.result_box.add_widget(label)
+
         for i in range(len(out)):
             action = out[i]
             label = Label(text=action)
+            #label = Label(text = sekon[0][1])
             self.ids.result_box.add_widget(label)
 
 
@@ -388,7 +410,7 @@ class resultScr(Screen): #6
                     (0,0,255),
                     2
                 )
-
+            print("drawing now")
             cv2.imwrite("temp_result.png", gbr)
 
 
@@ -536,12 +558,12 @@ class resultScr(Screen): #6
         f.Q = np.zeros((4,4))
 
         #sensor input
-        def sensor_read():
-            a =np.array([ [231.],
-                        [77.],      #position
-                        [ np.negative(26.)],
-                        [4.] ])    #velocity
-            return a
+        # def sensor_read():
+        #     a =np.array([ [231.],
+        #                 [77.],      #position
+        #                 [ np.negative(26.)],
+        #                 [4.] ])    #velocity
+        #     return a
 
         # PREDICT UPDATE LOOP
         for i in range(len(accelx)-3): #masi kebanyakan len nya mknya out of range
@@ -549,24 +571,28 @@ class resultScr(Screen): #6
                         pos_y[i+3],      #position
                         vel_x[i+3],
                         vel_y[i+3] ])    #velocity    
-            f.predict()
             try:
                 f.u = np.array([ accelx(i+3),
                                 accely(i+3)  ])
             except:
                 pass
+            f.predict()
             f.update(z)
             kf_res_x.append(np.round(f.x[0]))
             kf_res_y.append(np.round(f.x[1]))
             kf_res_vx.append(np.round(f.x[2]))
             kf_res_vy.append(np.round(f.x[3]))
 
-            #print('input z:')
-            #print(z)
-            #print('predict')
-            #print(f.x)
+            print('input z:')
+            print(z)
+            print('===========KF============')
+            print("predict: ",f.x_prior)
+            print("update: ",f.x)
+            print('=========================')
 
-        # print(kf_res_x,kf_res_y,kf_res_vx,kf_res_vy)
+            
+
+        print(kf_res_x,kf_res_y,kf_res_vx,kf_res_vy)
         guess_noise=.9*((var_vy)**2)
         # print(guess_noise)
         # print(var_x,var_y,var_vx,var_vy)
@@ -580,6 +606,7 @@ class resultScr(Screen): #6
             'guess_noise': .9
         }
         self.draw_kf(kf_res_x, kf_res_y)
+        print("showing it")
         self.ids.result_img.source = 'temp_result.png'
 
         return out
@@ -644,6 +671,8 @@ class resultScr(Screen): #6
 
             #every second do
             if sframe % nframe == 0 :
+                #sframe akumulasi tiap 30frame
+                #print(sframe,nframe)
 
                 #proses preprocessing 
                 fgmask = bgsub.apply(frame)
@@ -691,16 +720,16 @@ class resultScr(Screen): #6
                         noice_lc = 0
 
                     if noise_cd =='HT':
-                        if cy < noise_lc:
+                        if cy <= noise_lc:
                             continue
                     if noise_cd =='HB':
-                        if cy > noise_lc:
+                        if cy >= noise_lc:
                             continue
                     if noise_cd =='VL':
-                        if cx < noise_lc:
+                        if cx <= noise_lc:
                             continue
                     if noise_cd =='VR':
-                        if cx > noise_lc:
+                        if cx >= noise_lc:
                             continue
 
                     if contNum > 1:
@@ -727,14 +756,15 @@ class resultScr(Screen): #6
                         pass
                     #kalo contour >1
                 try:
-                    for i in range (len(x_obj)):
+                    for i in range (len(x_obj)): 
                         cv2.line(drawing, (x_obj[i],y_obj[i]), (x_obj[i+1],y_obj[i+1]), (0,0,255), 2) 
                 except:
                     pass
 
-            # cv2.imshow('Frame', drawing)
+            cv2.imshow('Frame', drawing)
             # self.ids.result_img.source = drawing
             sframe += 1
+            
             fps.update()
             # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
             out.write(drawing)

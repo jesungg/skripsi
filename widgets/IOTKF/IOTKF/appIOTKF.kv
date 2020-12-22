@@ -11,7 +11,7 @@
             text: "Aplikasi Tracking Manusia \n Dalam Ruangan"
         Label:
             font_size: 30
-            text: "...Details..."
+            text: 
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
@@ -33,19 +33,21 @@
             on_press: root.manager.current = 'about_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: 
 
 <selVidScr>:
     BoxLayout:
-        padding: [2,2,2,10]
+        padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
         Label:
             font_size: 50
             text: "Kriteria video"
-        Label:
+        TextInput:
+            readonly: True
+            multiline: True
             font_size: 30
-            text: "penjelasannya"
+            text: "1. pilihlah video berformat .mp4\n2. pastikan objek dalam video berjumlah satu orang\nsetelah memilih video tekan pengaturan video"
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
@@ -53,31 +55,39 @@
             text: "Pilih video"
             on_release: root.show_file()
          #show filename
-        Label:
-            font_size: 50
-            text: "penjelasannya"
+        TextInput:
+            readonly: True
+            multiline: True
+            font_size: 32
+            text: "pada pengaturan video masukan parameter-parameter dan tekan tampilkan koordinat untuk bantuan koordinat lokasi pada video"
         #how?
-        Label:
-            font_size: 50
-            text: "penjelasannya"
-        Label:
-            font_size: 30
-            text: "langkah proses"
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
             size: 140,50
             text: "Pengaturan Video"
             on_press: root.manager.current = 'new_set'
+        TextInput:
+            readonly: True
+            multiline: True
+            font_size: 32
+            text: "lewati pengaturan video jika sudah pernah membuat konfigurasi untuk video yang dipilih"
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
             size: 190,50
             text: "Lewati Pengaturan Video"
             on_press: root.manager.current = 'choose_set'
+        Button:
+            pos_hint: {'center_x': .9, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Kembali"
+            on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
 <openFileDiag>:
     BoxLayout:
         size: root.size
@@ -99,15 +109,17 @@
                 on_release: root.cancel()
 <helpScr>:
     BoxLayout:
-        padding: [2,2,2,10]
+        padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
         Label:
             font_size: 50
-            text: "Help"
-        Label:
-            font_size: 50
-            text: "how to use....tutorial explanations...."
+            text: "Bantuan Aplikasi"
+        TextInput:
+            readonly: True
+            multiline: True
+            font_size: 20
+            text: "aplikasi ini hanya menerima masukan berupa .mp4 maka pilihlah video berformat .mp4\nKetika membuat konfigurasi baru variabel nama konfigurasi wajib diisi\nGunakan window koordinat untuk menampilkan nilai x dan y\nKoordinat noise diisi dengan cara memasukan sebuah nilai, yaitu nilai x untuk posisi noise di kiri atau kanan dan nilai y untuk posisi atas atau bawah.\nUntuk hasil yang terbaik isilah variabel yang ada dengan baik\nkoordinat tidak saling menimpa dan memeriksa kembali sebelum disimpan\nparameter aksi dapat diisi minimal 1 dan maksimal 10, isi dengan lengkap karena jika tidak lengkap penyimpanan akan gagal."
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
@@ -117,18 +129,20 @@
             on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
 <aboutScr>:
     BoxLayout:
-        padding: [2,2,2,10]
+        padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
         Label:
             font_size: 50
-            text: "About this application"
-        Label:
-            font_size: 30
-            text: "....5W 1H...."
+            text: "Tentang Aplikasi"
+        TextInput:
+            readonly: True
+            multiline: True
+            font_size: 20
+            text: "Aplikasi ini dibuat untuk melakukan tracking objek target manusia di dalam ruangan. Objek dideteksi awalnya dengan background substraction dan teknik preprocessing, objek yang terdeteksi ditrack dengan kalman filter untuk memberikan nilai yang lebih akurat dari deteksi awal. Nilai tersebut kemudian akan diasosiasikan dengan masukan nilai konfigurasi. Aksi yang bersentuhan dengan lokasi objek dipakai untuk menentukan kegiatan manusia di dalam ruangan"
         Button:
             pos_hint: {'center_x': .5, 'center_y': .5}
             size_hint: None, None
@@ -138,10 +152,12 @@
             on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
 <newSet>:
+    on_pre_enter: new_set_box.clear_widgets()
     BoxLayout:
-        padding: [2,2,2,10]
+        id:new_set_box
+        padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
         TextInput:
@@ -155,7 +171,7 @@
             pos_hint: {'center_x': .9, 'center_y': .5}
             size_hint: None, None
             size: 250,30
-            text: "show coordinate"
+            text: "Tampilkan Koordinat"
             on_press: root.show_coor()
         BoxLayout:
             padding: [2,2,2,10]
@@ -237,7 +253,7 @@
             Label:
                 pos_hint: {'center_x': .5, 'center_y': .5}
                 font_size: 12
-                text: "Actions" 
+                text: "" 
         BoxLayout:
             padding: [2,2,2,10]
             spacing: 2
@@ -662,13 +678,20 @@
             pos_hint: {'center_x': .5, 'center_y': .9}
             size_hint: None, None
             size: 150,20
-            text: "Save"
+            text: "Simpan"
             on_release: root.manager.current = 'choose_set'
             on_press: root.get_variables()
+        Button:
+            pos_hint: {'center_x': .9, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Kembali"
+            on_press: root.manager.current = 'sel_vid_scr'
         Label:
             pos_hint: {'center_x': .5, 'center_y': .9}
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
 <chooseSet>:
     containerr : containerr
     container_gb : container_gb
@@ -695,17 +718,24 @@
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
             size: 150,20
-            text: "Delete"
+            text: "Hapus"
             on_press: root.handle_delete()
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
             size: 150,20
-            text: "Next"
+            text: "Selanjutnya"
             on_press: root.handleNext(root.manager)
+        Button:
+            pos_hint: {'center_x': .9, 'center_y': .5}
+            size_hint: None, None
+            size: 140,50
+            size_hint: .1, .1
+            text: "Kembali"
+            on_press: root.manager.current = 'sel_vid_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
 <resultScr>:
     on_pre_enter: root.lokasi_obj()
     on_pre_leave: result_box.clear_widgets()
@@ -724,12 +754,14 @@
                 padding: [2,2,2,10]
                 spacing: 2
                 orientation: 'vertical'
+                Label:
+                    text:'Log Aktivitas'
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None
             size: 150,20
-            text: "Finish"
+            text: "Selesai"
             on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
-            text: "...v0.0...dd/mm/yy..."
+            text: ""
