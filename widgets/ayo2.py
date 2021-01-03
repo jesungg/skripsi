@@ -36,13 +36,13 @@ lineType               = 2
 
 kernel = np.ones((5,5),np.uint8)
 
-cap = cv.VideoCapture('sampel.mp4')
+cap = cv.VideoCapture('widgets/sampel.mp4')
 bgsub = cv.createBackgroundSubtractorMOG2()
 fps =  FPS().start()
 #frame_width = int(cap.get(3))
 #frame_height = int(cap.get(4))
 try:
-    out = cv.VideoWriter('obdet.avi',cv.VideoWriter_fourcc('M','J','P','G'), 20, (600,337))
+    out = cv.VideoWriter('frames.avi',cv.VideoWriter_fourcc('M','J','P','G'), 20, (600,337))
 except:
     pass
 
@@ -105,11 +105,11 @@ while True:
                             pass
                 except:
                     pass
-                cv.rectangle(drawing, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
+                cv.rectangle(frame, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
                 x_obj.append(cx)
                 y_obj.append(cy)
             else:
-                cv.rectangle(drawing, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
+                cv.rectangle(frame, (cx,cy), (cx+1, cy+1), (0,0,255), 2) #titik
                 x_obj.append(cx)
                 y_obj.append(cy)
 
@@ -136,6 +136,8 @@ while True:
         try:
             for i in range (len(x_obj)):
                 cv.line(drawing, (x_obj[i],y_obj[i]), (x_obj[i+1],y_obj[i+1]), (0,0,255), 2) 
+                cv.line(frame, (x_obj[i],y_obj[i]), (x_obj[i+1],y_obj[i+1]), (0,0,255), 2) 
+
         except:
             pass 
 
@@ -154,17 +156,19 @@ while True:
     #    lineType)
     #print (cx,cy)
     #cv.imshow('Frame', frame)
-    cv.imshow('Frame', drawing)
-
-    #cv.imshow('FG MASK+MF Frame', gblur)
-    #cv.imshow('erosion', erosion)
+    #cv.imshow('draw', drawing)
+    #cv.imshow('threshed',threshed)
     #cv.imshow('closing', closing)
-    #cv.imshow('dilation', dilation)
+
+    cv.imshow('FG MASK+MF Frame', gblur)
+    cv.imshow('erosion', erosion)
+    cv.imshow('closing', closing)
+    cv.imshow('dilation', dilation)
     #print(aw, ah)
     sframe += 1
     fps.update()
     # Define the codec and create VideoWriter object.The output is stored in 'outpy.avi' file.
-    out.write(drawing)
+    out.write(frame)
 
     keyboard = cv.waitKey(30)
     if keyboard == 'q' or keyboard == 27:

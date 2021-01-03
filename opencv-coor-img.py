@@ -29,7 +29,9 @@ def click_event(event, x, y, flags, param):
 
 
 #Here, you need to change the image name and it's path according to your directory
-img = cv2.imread("widgets/sampeltest.png")
+img = cv2.imread(
+'/Users/jesung/Documents/code/skripsi2/skripsi/RCR1-frames/image0.jpg'
+    )
 cv2.imshow("image", img)
 
 #calling the mouse click event

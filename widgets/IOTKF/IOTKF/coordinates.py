@@ -6,7 +6,7 @@ import imutils
 
 #This will display all the available mouse click events  
 events = [i for i in dir(cv2) if 'EVENT' in i]
-print(events)
+# print(events)
 
 #This variable we use to store the pixel location
 refPt = []
@@ -14,6 +14,7 @@ refPt = []
 #click event function
 def click_event(event, x, y, flags, param):
     if event == cv2.EVENT_LBUTTONDOWN:
+        print()
         print(x,",",y)
         refPt.append([x,y])
         font = cv2.FONT_HERSHEY_SIMPLEX
@@ -32,7 +33,9 @@ def click_event(event, x, y, flags, param):
 
 
 #Here, you need to change the image name and it's path according to your directory
-img = cv2.imread("/Users/jesung/Documents/code/skripsi2/skripsi/widgets/IOTKF/IOTKF/sampeltest.png")
+img = cv2.imread(
+    '/Users/jesung/Documents/code/skripsi2/skripsi/RCR5-frames/image26.jpg'
+)
 img = imutils.resize(img, width=600)
 cv2.imshow("image", img)
 

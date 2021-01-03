@@ -2,6 +2,7 @@
 
 <welcomeScr>:
     BoxLayout:
+        id: welcome_scr_box
         padding: [2,2,4,2]
         spacing: 2
         orientation: 'vertical'
@@ -37,6 +38,7 @@
 
 <selVidScr>:
     BoxLayout:
+        id: sel_vid_box
         padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
@@ -109,6 +111,7 @@
                 on_release: root.cancel()
 <helpScr>:
     BoxLayout:
+        id:help_scr_box
         padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
@@ -132,6 +135,7 @@
             text: ""
 <aboutScr>:
     BoxLayout:
+        id:about_scr_box
         padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
@@ -154,35 +158,161 @@
             font_size: 10
             text: ""
 <newSet>:
-    on_pre_enter: new_set_box.clear_widgets()
+    on_pre_enter: 
+        setup_name.text= ''
+        noise_code.text= ''
+        noise_loc.text= ''
+        noise_x0.text=''
+        noise_y0.text=''
+        noise_x1.text=''
+        noise_y1.text=''
+        cont_height.text=''
+        cont_large.text=''
+        a1nem.text= ''
+        a1xnol.text= ''
+        a1xsatu.text= ''
+        a1ynol.text= ''
+        a1ysatu.text= ''
+        a2nem.text= ''
+        a2xnol.text= ''
+        a2xsatu.text= ''
+        a2ynol.text= ''
+        a2ysatu.text= ''
+        a3nem.text= ''
+        a3xnol.text= ''
+        a3xsatu.text= ''
+        a3ynol.text= ''
+        a3ysatu.text= ''
+        a4nem.text= ''
+        a4xnol.text= ''
+        a4xsatu.text= ''
+        a4ynol.text= ''
+        a4ysatu.text= ''
+        a5nem.text= ''
+        a5xnol.text= ''
+        a5xsatu.text= ''
+        a5ynol.text= ''
+        a5ysatu.text= ''
+        a6nem.text= ''
+        a6xnol.text= ''
+        a6xsatu.text= ''
+        a6ynol.text= ''
+        a6ysatu.text= ''
+        a7nem.text= ''
+        a7xnol.text= ''
+        a7xsatu.text= ''
+        a7ynol.text= ''
+        a7ysatu.text= ''
+        a8nem.text= ''
+        a8xnol.text= ''
+        a8xsatu.text= ''
+        a8ynol.text= ''
+        a8ysatu.text= ''
+        a9nem.text= ''
+        a9xnol.text= ''
+        a9xsatu.text= ''
+        a9ynol.text= ''
+        a9ysatu.text= ''
+        a10nem.text= ''
+        a10xnol.text= ''
+        a10xsatu.text= ''
+        a10ynol.text= ''
+        a10ysatu.text= ''
     BoxLayout:
-        id:new_set_box
         padding: [2,2,2,2]
-        spacing: 2
+        spacing: 5
         orientation: 'vertical'
         TextInput:
-            pos_hint: {'center_x': .5, 'center_y': .5}
-            size_hint: None, None
-            size: 250,50
+            pos_hint: {'center_x': .5}
+            size_hint: (.5, .3)
             id: setup_name
             font_size: 25
             hint_text: "Video setup name"
         Button:
-            pos_hint: {'center_x': .9, 'center_y': .5}
-            size_hint: None, None
-            size: 250,30
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
             text: "Tampilkan Koordinat"
             on_press: root.show_coor()
         BoxLayout:
-            padding: [2,2,2,10]
+            padding: [2,2,2,2]
             spacing: 2
             orientation: 'horizontal'
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
-                    pos_hint: {'center_x': .5, 'center_y': .9}
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 130,30
+                    id: cont_large
+                    hint_text: 'Min contour large'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 130,30
+                    id: cont_height
+                    hint_text: 'Min contour height'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+            BoxLayout:
+                padding: [2,2,2,2]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
+                    id: noise_x0
+                    hint_text: 'noise x0'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
+                    id: noise_y0
+                    hint_text: 'noise y0'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+            BoxLayout:
+                padding: [2,2,2,2]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
+                    id: noise_x1
+                    hint_text: 'noise x1'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
+                    size_hint: None, None
+                    size: 110,30
+                    id: noise_y1
+                    hint_text: 'noise y1'
+                    input_filter: 'int'
+                    multiline:False
+                    font_size: 12
+        BoxLayout:
+            padding: [2,2,2,2]
+            spacing: 2
+            orientation: 'horizontal'
+            BoxLayout:
+                padding: [2,2,2,2]
+                spacing: 2
+                orientation: 'vertical'
+                TextInput:
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
                     size_hint: None, None
                     size: 110,30
                     id: noise_loc
@@ -191,7 +321,7 @@
                     multiline:False
                     font_size: 12
                 TextInput:
-                    pos_hint: {'center_x': .5, 'center_y': .9}
+                    #pos_hint: {'center_x': .5, 'center_y': .9}
                     size_hint: None, None
                     size: 110,30
                     id: noise_code
@@ -199,67 +329,67 @@
                     multiline:False
                     font_size: 12
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 Label:
-                    pos_hint: {'center_x': .5, 'center_y': .5}
+                    #pos_hint: {'center_x': .5, 'center_y': .5}
                     font_size: 15
                     text: "locations"
                 BoxLayout:
-                    padding: [2,2,2,10]
+                    padding: [2,2,2,2]
                     spacing: 2
                     orientation: 'vertical'
                     BoxLayout:
-                        padding: [2,2,2,10]
+                        padding: [2,2,2,2]
                         spacing: 2
                         orientation: 'horizontal'
                         Label:
-                            pos_hint: {'center_x': .2, 'center_y': .5}
+                            #pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
                             text: "HT : Horizontal Top"  
                     BoxLayout:
-                        padding: [2,2,2,10]
+                        padding: [2,2,2,2]
                         spacing: 2
                         orientation: 'horizontal'
                         Label:
-                            pos_hint: {'center_x': .2, 'center_y': .5}
+                            #pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
                             text: "HB : Horizontal Bottom"
                 BoxLayout:
-                    padding: [2,2,2,10]
+                    padding: [2,2,2,2]
                     spacing: 2
                     orientation: 'vertical'
                     BoxLayout:
-                        padding: [2,2,2,10]
+                        padding: [2,2,2,2]
                         spacing: 2
                         orientation: 'horizontal'
                         Label:
-                            pos_hint: {'center_x': .2, 'center_y': .5}
+                            #pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
                             text: "VL : Vertical Left"
                     BoxLayout:
-                        padding: [2,2,2,10]
+                        padding: [2,2,2,2]
                         spacing: 2
                         orientation: 'horizontal'
                         Label:
-                            pos_hint: {'center_x': .2, 'center_y': .5}
+                            #pos_hint: {'center_x': .2, 'center_y': .5}
                             font_size: 12
                             text: "VR : Vertical Right"                     
         BoxLayout:
-            padding: [2,2,2,10]
+            padding: [2,2,2,2]
             spacing: 2
             orientation: 'vertical'
             Label:
-                pos_hint: {'center_x': .5, 'center_y': .5}
+                #pos_hint: {'center_x': .5, 'center_y': .5}
                 font_size: 12
                 text: "" 
         BoxLayout:
-            padding: [2,2,2,10]
+            padding: [2,2,2,2]
             spacing: 2
             orientation: 'horizontal'
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
@@ -333,13 +463,13 @@
                     font_size: 12
                     hint_text: "action 10" 
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 Label:
                     text:"   "
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
@@ -423,7 +553,7 @@
                     input_filter: 'int'
                     hint_text: "x0"  
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
@@ -507,7 +637,7 @@
                     input_filter: 'int'
                     hint_text: "y0"  
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
@@ -591,7 +721,7 @@
                     input_filter: 'int'
                     hint_text: "x1"
             BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 TextInput:
@@ -675,23 +805,18 @@
                     font_size: 12
                     hint_text: "y1"
         Button:
-            pos_hint: {'center_x': .5, 'center_y': .9}
-            size_hint: None, None
-            size: 150,20
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
             text: "Simpan"
             on_release: root.manager.current = 'choose_set'
             on_press: root.get_variables()
         Button:
-            pos_hint: {'center_x': .9, 'center_y': .5}
-            size_hint: None, None
-            size: 140,50
-            size_hint: .1, .1
+            pos_hint: {'center_x': .5}
+            size_hint: (.3, .1)
+            #size_hint: .1, .1
             text: "Kembali"
             on_press: root.manager.current = 'sel_vid_scr'
-        Label:
-            pos_hint: {'center_x': .5, 'center_y': .9}
-            font_size: 10
-            text: ""
+
 <chooseSet>:
     containerr : containerr
     container_gb : container_gb
@@ -701,16 +826,17 @@
         spacing: 2
         orientation: 'vertical'
         BoxLayout:
-            padding: [2,2,2,10]
+            padding: [2,2,2,2]
             spacing: 2
             orientation: 'horizontal'
+            ScrollView:
+                BoxLayout:
+                    padding: [2,2,2,2]
+                    spacing: 2
+                    orientation: 'vertical'
+                    id: containerr
             BoxLayout:
-                padding: [2,2,2,10]
-                spacing: 2
-                orientation: 'vertical'
-                id: containerr
-            BoxLayout:
-                padding: [2,2,2,10]
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 id: container_gb
@@ -727,18 +853,17 @@
             text: "Selanjutnya"
             on_press: root.handleNext(root.manager)
         Button:
-            pos_hint: {'center_x': .9, 'center_y': .5}
+            pos_hint: {'center_x': .9, 'center_y': .9}
             size_hint: None, None
             size: 140,50
             size_hint: .1, .1
             text: "Kembali"
             on_press: root.manager.current = 'sel_vid_scr'
-        Label:
-            font_size: 10
-            text: ""
+
 <resultScr>:
-    on_pre_enter: root.lokasi_obj()
-    on_pre_leave: result_box.clear_widgets()
+    on_pre_enter: root.lokasi_obj(),root.show_videoNonkf()
+    on_enter:root.show_videoKF()
+    on_pre_leave: result_box.clear_widgets(),img_box.clear_widgets()
     BoxLayout:
         padding: [2,2,2,10]
         spacing: 2
@@ -747,15 +872,24 @@
             padding: [2,2,2,10]
             spacing: 2
             orientation: 'horizontal'
-            Image:
-                id: result_img
             BoxLayout:
-                id: result_box
-                padding: [2,2,2,10]
+                id:img_box
+                padding: [2,2,2,2]
+                spacing: 2
+                orientation: 'horizontal'
+                # Image:
+                #     id: result_img
+            BoxLayout:
+                padding: [2,2,2,2]
                 spacing: 2
                 orientation: 'vertical'
                 Label:
                     text:'Log Aktivitas'
+                BoxLayout:
+                    id: result_box
+                    padding: [2,2,2,10]
+                    spacing: 2
+                    orientation: 'vertical'
         Button:
             pos_hint: {'center_x': .5, 'center_y': .8}
             size_hint: None, None

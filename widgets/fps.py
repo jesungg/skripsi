@@ -1,5 +1,7 @@
 import cv2
-vidcap = cv2.VideoCapture('/Users/jesung/Documents/code/skripsi2/skripsi/widgets/sampel video/KC10.mp4')
+vidcap = cv2.VideoCapture(
+    '/Users/jesung/Documents/code/skripsi2/skripsi/widgets/sampel video/Rumah/RCR5.mp4'
+    )
 def getFrame(sec):
     vidcap.set(cv2.CAP_PROP_POS_MSEC,sec*1000)
     hasFrames,image = vidcap.read()
