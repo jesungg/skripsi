@@ -103,10 +103,10 @@
             size_hint_y: None
             height: 30
             Button:
-                text: "Cancel"
+                text: "Batalkan"
                 on_release: root.cancel()
             Button:
-                text: "Load"
+                text: "Memuat"
                 on_press: root.select(filechooser.path, filechooser.selection)
                 on_release: root.cancel()
 <helpScr>:
@@ -128,7 +128,7 @@
             size_hint: None, None
             size: 140,50
             size_hint: .1, .1
-            text: "Home"
+            text: "Beranda"
             on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
@@ -152,7 +152,7 @@
             size_hint: None, None
             size: 140,50
             size_hint: .1, .1
-            text: "Home"
+            text: "Beranda"
             on_press: root.manager.current = 'welcome_scr'
         Label:
             font_size: 10
@@ -227,7 +227,7 @@
             size_hint: (.5, .3)
             id: setup_name
             font_size: 25
-            hint_text: "Video setup name"
+            hint_text: "Nama Pengaturan Video"
         Button:
             pos_hint: {'center_x': .5}
             size_hint: (.3, .1)
@@ -246,7 +246,7 @@
                     size_hint: None, None
                     size: 130,30
                     id: cont_large
-                    hint_text: 'Min contour large'
+                    hint_text: 'Min Luas kontour '
                     input_filter: 'int'
                     multiline:False
                     font_size: 12
@@ -255,7 +255,7 @@
                     size_hint: None, None
                     size: 130,30
                     id: cont_height
-                    hint_text: 'Min contour height'
+                    hint_text: 'Min Tinggi kontour'
                     input_filter: 'int'
                     multiline:False
                     font_size: 12
@@ -316,7 +316,7 @@
                     size_hint: None, None
                     size: 110,30
                     id: noise_loc
-                    hint_text: 'noise coordinate'
+                    hint_text: 'noise Koordinat'
                     input_filter: 'int'
                     multiline:False
                     font_size: 12
@@ -335,7 +335,7 @@
                 Label:
                     #pos_hint: {'center_x': .5, 'center_y': .5}
                     font_size: 15
-                    text: "locations"
+                    text: "Lokasi :"
                 BoxLayout:
                     padding: [2,2,2,2]
                     spacing: 2
@@ -860,16 +860,43 @@
             text: "Kembali"
             on_press: root.manager.current = 'sel_vid_scr'
 
-<resultScr>:
-    on_pre_enter: root.lokasi_obj(),root.show_videoNonkf()
-    on_enter:root.show_videoKF()
-    on_pre_leave: result_box.clear_widgets(),img_box.clear_widgets()
+<SaveDialog>:
+    on_pre_enter: text_input.clear_widgets()
+    text_input: text_input
     BoxLayout:
-        padding: [2,2,2,10]
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: savefilechooser
+            on_selection: text_input.text = self.selection and self.selection[0] or ''
+
+        TextInput:
+            id: text_input
+            size_hint_y: None
+            height: 30
+            multiline: False
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Batalkan"
+                on_release: root.cancel()
+
+            Button:
+                text: "Simpan"
+                on_release: root.save_plot(savefilechooser.path, text_input.text)
+
+<resultScr>:
+    on_pre_enter: root.lokasi_obj(),root.show_video()
+    on_pre_leave: result_box.clear_widgets(),img_box.clear_widgets(),plot_box.clear_widgets()
+    BoxLayout:
+        padding: [2,2,2,2]
         spacing: 2
         orientation: 'vertical'
         BoxLayout:
-            padding: [2,2,2,10]
+            padding: [2,2,2,2]
             spacing: 2
             orientation: 'horizontal'
             BoxLayout:
@@ -887,11 +914,22 @@
                     text:'Log Aktivitas'
                 BoxLayout:
                     id: result_box
-                    padding: [2,2,2,10]
+                    padding: [2,2,2,2]
                     spacing: 2
                     orientation: 'vertical'
+        BoxLayout:
+            padding: [2,2,2,2]
+            spacing: 2
+            orientation: 'horizontal'
+            id: plot_box
         Button:
-            pos_hint: {'center_x': .5, 'center_y': .8}
+            pos_hint: {'center_x': .5}
+            size_hint: None, None
+            size: 150,20
+            text: "Simpan grafik"
+            on_press: root.show_save()
+        Button:
+            pos_hint: {'center_x': .5}
             size_hint: None, None
             size: 150,20
             text: "Selesai"

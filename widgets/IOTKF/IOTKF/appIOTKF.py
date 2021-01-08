@@ -4,11 +4,14 @@ import json
 import math
 import os
 import time
+from fileinput import filename
+from turtledemo.chaos import plot
 
 import cv2
 import filterpy
 import imutils
 import kivy
+import matplotlib.pyplot as plt
 import numpy as np
 from filterpy.common import Q_discrete_white_noise
 from filterpy.kalman import KalmanFilter
@@ -94,7 +97,7 @@ class selVidScr(Screen): #2
     def show_file(self):
         print("show popup")
         content = openFileDiag(select=self.select, cancel=self.dismiss_popup)
-        self._popup =Popup(title="Select video file", content=content, size_hint=(.9, .9))
+        self._popup =Popup(title="Pilih file video", content=content, size_hint=(.9, .9))
         self._popup.open()
     
 
@@ -334,10 +337,35 @@ class addAct(FloatLayout): #pop3
 class loadingScr(Screen): #5
     pass
 
+class SaveDialog(FloatLayout):
+    save_plot = ObjectProperty(None)
+    text_input = ObjectProperty(None)
+    cancel = ObjectProperty(None)
 
 class resultScr(Screen): #6
     config_id = None
+    savefile = ObjectProperty(None)
+    text_input = ObjectProperty(None)
     # displayed_img = None
+    def show_save(self):
+        content = SaveDialog(save_plot=self.save_plot, cancel=self.dismiss_popup)
+        self._popup = Popup(title="Save file", content=content,
+                            size_hint=(0.9, 0.9))
+        self._popup.open()
+    
+    def dismiss_popup(self):
+        self._popup.dismiss()
+
+    def save_plot(self, path, filename):
+        IMG = cv2.imread('final_plot_img.png')
+        IMGPATH = path+'/'+filename+'.png'
+        cv2.imwrite(str(IMGPATH),IMG)
+
+        self.dismiss_popup()
+
+
+
+
     def write_desc(self):
         data_file = newSet().openJson()
         config = data_file[self.config_id]
@@ -410,32 +438,6 @@ class resultScr(Screen): #6
             label = Label(text=action)
             #label = Label(text = sekon[0][1])
             self.ids.result_box.add_widget(label)
-
-
-
-
-    def draw_kf(self,x_kf,y_kf):
-        try:
-            gbr = cv2.imread(store.get('image_data')['capture_path'])
-            gbr = imutils.resize(gbr,width=600)
-            for i in range(len(x_kf)):
-                x_kf[i] = int(x_kf[i])
-                y_kf[i] = int(y_kf[i])
-
-            for i in range(len(x_kf)-1):
-                cv2.line(
-                    gbr,
-                    (x_kf[i],y_kf[i]),
-                    (x_kf[i+1],y_kf[i+1]),
-                    (0,0,255),
-                    2
-                )
-            print("drawing now")
-            cv2.imwrite("temp_result.png", gbr)
-
-
-        except Exception as e:
-            print("[ERROR] draw_kf",e)
 
     def kf(self,x_obj,y_obj):
         #list posisi objek
@@ -626,15 +628,9 @@ class resultScr(Screen): #6
             'kf_vy': kf_res_vy,
             'guess_noise': .9
         }
-        self.draw_kf(kf_res_x, kf_res_y)
-        print("showing it")
-        gbr_result= Image(source='temp_result.png')
-        self.ids.img_box.add_widget(gbr_result)
-        # self.ids.result_img.source = 'temp_result.png'
-
         return out
     
-    def show_videoNonkf(self):
+    def show_video(self):
 
         self.config_id = store.get('config_data')['selected_config_id']
         config = {}
@@ -644,193 +640,126 @@ class resultScr(Screen): #6
         else:
             print("[ERROR!] NO CONFIG ID")
 
-        #get t_obj, kf_x, kf_y
-        # t_object = [7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 35, 36]
-        # _x=[385, 378, 354, 342, 318, 318, 350, 399, 441, 444, 449, 453, 448, 552, 475, 492, 502, 521, 457, 483, 472, 401, 365, 328, 306, 318, 337, 335, 340, 379]
-        # _y=[239, 242, 250, 267, 234, 239, 253, 271, 263, 265, 263, 265, 268, 297, 266, 260, 264, 280, 291, 287, 281, 277, 262, 255, 256, 231, 221, 230, 262, 261]
-
+        
         t_object = config['output']['object_detection']['t_obj']
         _x = config['output']['object_detection']['x_obj']
         _y = config['output']['object_detection']['y_obj']
+        kf_x = config['output']['kalman_filter']['kf_x']
+        kf_y = config['output']['kalman_filter']['kf_y']
+
         #start opening video
         fwidth = None
         fheight = None
         nframe = 30
         sframe = 0
         pointr = 0
-        # #kf timestep
-        # for i in range(len(t_object)):
-        #     t_object[i]+=1
-
-        # time_kf = t_object
-        # addtime = t_object[-1]+1
-        # time_kf = []
-        # time_kf = t_object+[addtime]
-
         connecting_x = []
+        connecting_kfx = []
         connecting_y = []
+        connecting_kfy = []
         # # print(time_kf)
         dupli_ = None
+        dupli_kf = None
+        for i in range(len(t_object)):
+            t_object[i]+=1
+        time_kf = t_object
+
+
         # # print(addtime,'-->',time_kf)
-        cap = cv2.VideoCapture(store.get('video_data')['video_path'])
+        cap1 = cv2.VideoCapture(store.get('video_data')['video_path'])
+        cap2 = cv2.VideoCapture(store.get('video_data')['video_path'])
         # cap = cv2.VideoCapture('/Users/jesung/Documents/code/skripsi2/skripsi/widgets/sampel video/Kantor/KC1.mp4')
         fps =  FPS().start()
 
         while True:
-            ret, frame = cap.read()
+            ret, frame1 = cap1.read()
+            ret, frame2 = cap2.read()
 
             fps.update()
             
             try:    
-                frame = imutils.resize(frame, width=600)
-                (aw, ah, ac) = frame.shape
+                frame1 = imutils.resize(frame1, width=600)
+                (aw, ah, ac) = frame1.shape
+                frame2 = imutils.resize(frame2, width=600)
+                (aw0, ah0, ac0) = frame1.shape
             except:
                 pass
+
             #ini udh ok
-            if frame is None:
+            if frame1 is None:
                 fps.stop()
                 break
 
-            # everysecond do
+            if frame2 is None:
+                fps.stop()
+                break
+
+            try:
+                for i in range(len(connecting_kfx)):
+                    if len(connecting_kfx) == 1:
+                        x0=int(connecting_kfx[i])
+                        y0=int(connecting_kfy[i])
+                        cv2.rectangle(frame2, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
+                    if len(connecting_kfx)>2:
+                        try:
+                            x0=int(connecting_kfx[i])
+                            y0=int(connecting_kfy[i])
+                            x1=int(connecting_kfx[i+1])
+                            y1=int(connecting_kfy[i+1])
+                            # cv2.rectangle(frame, (kf_x[i],kf_y[i]), (kf_x[i]+1, kf_y[i]+1), (0,0,255), 2)
+                            cv2.line(frame2, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
+                            # print(connecting_x,'',connecting_y)
+                        except:
+                            pass
+                for i in range(len(connecting_x)):
+                    if len(connecting_x) == 1:
+                        x0=int(connecting_x[i])
+                        y0=int(connecting_y[i])
+                        cv2.rectangle(frame1, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
+                    if len(connecting_x)>2:
+                        try:
+                            x0=int(connecting_x[i])
+                            y0=int(connecting_y[i])
+                            x1=int(connecting_x[i+1])
+                            y1=int(connecting_y[i+1])
+                            # cv2.rectangle(frame, (kf_x[i],kf_y[i]), (kf_x[i]+1, kf_y[i]+1), (0,0,255), 2)
+                            cv2.line(frame1, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
+                            # print(connecting_x,'',connecting_y)
+                        except:
+                            pass
+            except:
+                pass
 
             if sframe % nframe == 0 :
+                vtime_ = int(sframe/nframe)
+                
+                # print('sec: ',vtime_)
+                # try:
+                #     print('time pointer:',t_object[pointr])
+                # except:
+                #     pass
                 try:
-                    vtime_ = int(sframe/nframe)
-                    
-                    for i in range(len(connecting_x)):
-                        pass
-                    vtime_ = int(sframe/nframe)
-                    print('sec: ',vtime_)
-                    
-                    print('time pointer:',t_object[pointr])
-                    
                     if t_object[pointr] == vtime_:
                         try:
                             for i in range(len(t_object)):
                                 if vtime_ == t_object[i]:
                                     print('index->',i)
-                                    print('kf x->',_x[i])
-                                    print('kf y->',_y[i])
+                                    print('x->',_x[i])
+                                    print('y->',_y[i])
                                     connecting_x.append(_x[i])
                                     connecting_y.append(_y[i])
                                     pointr+=1
                                     dupli_ = True
                                     # i =+ 1
-                        except:
-                            pass
-                        if dupli_ == True:
-                            print('if duplicate do something here')
-                            for i in range(len(connecting_x)):
-                                if len(connecting_x) == 1:
-                                    x0=int(connecting_x[i])
-                                    y0=int(connecting_y[i])
-                                    cv2.rectangle(frame, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
-                                if len(connecting_x)>2:
-                                    try:
-                                        x0=int(connecting_x[i])
-                                        y0=int(connecting_y[i])
-                                        x1=int(connecting_x[i+1])
-                                        y1=int(connecting_y[i+1])
-                                        # cv2.rectangle(frame, (kf_x[i],kf_y[i]), (kf_x[i]+1, kf_y[i]+1), (0,0,255), 2)
-                                        cv2.line(frame, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
-                                        # print(connecting_x,'',connecting_y)
-                                    except:
-                                        pass
-                            
-                            dupli_ = False
-                        print(connecting_x,connecting_y)
-                except:
-                    pass
-            
-            sframe += 1
-            fps.update()
-
-            cv2.imshow('Tracking non kf', frame)
-                
-            keyboard = cv2.waitKey(30)
-            if keyboard == ord('q') or keyboard == 27:
-                fps.stop()
-                break
-
-
-
-
-    def show_videoKF(self):
-        #getvideo
-        self.config_id = store.get('config_data')['selected_config_id']
-        config = {}
-        if self.config_id is not None:
-            data_list = newSet().openJson()
-            config = data_list[self.config_id]
-        else:
-            print("[ERROR!] NO CONFIG ID")
-
-        #get t_obj, kf_x, kf_y
-        # t_object = [7, 8, 9, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 35, 36]
-        # kf_x = [339.0, 318.0, 311.0, 326.0, 359.0, 395.0, 416.0, 434.0, 447.0, 455.0, 498.0, 497.0, 507.0, 517.0, 529.0, 521.0, 524.0, 522.0, 506.0, 487.0, 465.0, 443.0, 426.0, 415.0, 404.0, 395.0, 393.0]
-        # kf_y = [265.0, 246.0, 243.0, 248.0, 260.0, 261.0, 264.0, 265.0, 267.0, 269.0, 279.0, 277.0, 274.0, 274.0, 277.0, 281.0, 284.0, 285.0, 285.0, 282.0, 279.0, 276.0, 270.0, 263.0, 259.0, 259.0, 259.0]
-        t_object = config['output']['object_detection']['t_obj']
-        kf_x = config['output']['kalman_filter']['kf_x']
-        kf_y = config['output']['kalman_filter']['kf_y']
-        
-        #start opening video
-        fwidth = None
-        fheight = None
-        nframe = 30
-        sframe = 0
-        pointr = 0
-        #kf timestep
-        for i in range(len(t_object)):
-            t_object[i]+=1
-
-        time_kf = t_object
-        # addtime = t_object[-1]+1
-        # time_kf = []
-        # time_kf = t_object+[addtime]
-
-        connecting_x = []
-        connecting_y = []
-        # # print(time_kf)
-        dupli_ = None
-        # # print(addtime,'-->',time_kf)
-        cap = cv2.VideoCapture(store.get('video_data')['video_path'])
-        # cap = cv2.VideoCapture('/Users/jesung/Documents/code/skripsi2/skripsi/widgets/sampel video/Kantor/KC1.mp4')
-        fps =  FPS().start()
-
-        while True:
-            ret, frame = cap.read()
-
-            fps.update()
-            
-            try:    
-                frame = imutils.resize(frame, width=600)
-                (aw, ah, ac) = frame.shape
-            except:
-                pass
-            #ini udh ok
-            if frame is None:
-                fps.stop()
-                break
-
-
-            # everysecond do
-            if sframe % nframe == 0 :
-                try:
-                    vtime_ = int(sframe/nframe)
-                    # print('sec: ',vtime_)
-                    # print('time pointer:',time_kf[pointr])
-                    if time_kf[pointr] == vtime_:
-                        try:
                             for i in range(len(time_kf)):
                                 if vtime_ == time_kf[i]:
                                     print('index->',i)
                                     print('kf x->',kf_x[i])
                                     print('kf y->',kf_y[i])
-                                    connecting_x.append(kf_x[i])
-                                    connecting_y.append(kf_y[i])
+                                    connecting_kfx.append(kf_x[i])
+                                    connecting_kfy.append(kf_y[i])
                                     pointr+=1
-                                    dupli_ = True
-                                    # i =+ 1
+                                    dupli_kf = True
                         except:
                             pass
                         if dupli_ == True:
@@ -839,7 +768,7 @@ class resultScr(Screen): #6
                                 if len(connecting_x) == 1:
                                     x0=int(connecting_x[i])
                                     y0=int(connecting_y[i])
-                                    cv2.rectangle(frame, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
+                                    cv2.rectangle(frame1, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
                                 if len(connecting_x)>2:
                                     try:
                                         x0=int(connecting_x[i])
@@ -847,23 +776,84 @@ class resultScr(Screen): #6
                                         x1=int(connecting_x[i+1])
                                         y1=int(connecting_y[i+1])
                                         # cv2.rectangle(frame, (kf_x[i],kf_y[i]), (kf_x[i]+1, kf_y[i]+1), (0,0,255), 2)
-                                        cv2.line(frame, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
+                                        cv2.line(frame1, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
                                         # print(connecting_x,'',connecting_y)
                                     except:
                                         pass
-                            
                             dupli_ = False
-                        # print(connecting_x,connecting_y)
+                        
+                        if dupli_kf == True:
+                            for i in range(len(connecting_kfx)):
+                                if len(connecting_kfx) == 1:
+                                    x0=int(connecting_kfx[i])
+                                    y0=int(connecting_kfy[i])
+                                    cv2.rectangle(frame2, (x0,y0), (x0+1, y0+1), (0,0,255), 2)
+                                if len(connecting_kfx)>2:
+                                    try:
+                                        x0=int(connecting_kfx[i])
+                                        y0=int(connecting_kfy[i])
+                                        x1=int(connecting_kfx[i+1])
+                                        y1=int(connecting_kfy[i+1])
+                                        # cv2.rectangle(frame, (kf_x[i],kf_y[i]), (kf_x[i]+1, kf_y[i]+1), (0,0,255), 2)
+                                        cv2.line(frame2, pt1=(x0,y0), pt2=(x1,y1), color=(255,255,255), thickness=2)
+                                        # print(connecting_x,'',connecting_y)
+                                    except:
+                                        pass
+                            dupli_kf = False
+
+                        print(connecting_x,connecting_y)
                 except:
                     pass
             sframe += 1
             fps.update()
-            cv2.imshow('Tracking Kalman Filter', frame)
+
+            final=cv2.vconcat([frame1,frame2])
+            cv2.imshow('Frame', final)
+                
                 
             keyboard = cv2.waitKey(30)
             if keyboard == ord('q') or keyboard == 27:
                 fps.stop()
                 break
+        print('writing image')
+        cv2.imwrite("final_image.png", final)
+        print('start drawing')
+        gbr_result= Image(source='final_image.png')
+        print('drawing fin')
+
+        #try plotting
+        plotx_=_x+[None]
+        ploty_=_y+[None]
+        plot_kfx=[None,None,None,None]+kf_x
+        plot_kfy=[None,None,None,None]+kf_y
+        plot_t = [0]+t_object
+        plot_tkf = [0]+time_kf
+
+        plt.style.use('seaborn-whitegrid')
+        plt.subplot(2,1,1)
+        plt.plot(plot_t, plotx_)
+        plt.plot(plot_tkf, plot_kfx)
+        # plt.plot(t ,plotx_)
+        plt.ylabel('x-axis')
+
+        plt.subplot(2,1,2)
+        plt.plot(plot_t, ploty_)
+        plt.plot(plot_tkf, plot_kfy)
+        plt.xlabel('time (s)')
+        plt.ylabel('y-axis')
+
+        plt.savefig('final_plot_img.png')
+        plot_result= Image(source='final_plot_img.png')
+
+        self.ids.img_box.add_widget(gbr_result)
+        self.ids.plot_box.add_widget(plot_result)
+
+    def save():
+        pass
+
+
+        
+
 
 
     #object detection
@@ -1135,8 +1125,8 @@ class resultScr(Screen): #6
         }
         data_list[self.config_id] = config
         newSet().writeJson(data_list)
+        # print('start writing')
         self.write_desc()
-
         # =============== end save
     pass
 class resultVid(FloatLayout): #pop4
