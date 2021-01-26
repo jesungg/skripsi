@@ -861,7 +861,7 @@
             on_press: root.manager.current = 'sel_vid_scr'
 
 <SaveDialog>:
-    on_pre_enter: text_input.clear_widgets()
+    #on_pre_enter: text_input.clear_widgets()
     text_input: text_input
     BoxLayout:
         size: root.size
@@ -890,7 +890,7 @@
 
 <resultScr>:
     on_pre_enter: root.lokasi_obj(),root.show_video()
-    on_pre_leave: result_box.clear_widgets(),img_box.clear_widgets(),plot_box.clear_widgets()
+    on_pre_leave: result_box.clear_widgets(),img_box.clear_widgets(),plot_box.clear_widgets(),coor_box_master.clear_widgets()
     BoxLayout:
         padding: [2,2,2,2]
         spacing: 2
@@ -922,6 +922,21 @@
             spacing: 2
             orientation: 'horizontal'
             id: plot_box
+        BoxLayout:
+            padding: [0,0,0,0]
+            spacing: 1
+            orientation: 'horizontal'
+            id: coor_box_master
+            BoxLayout:
+                padding: [0,0,0,0]
+                spacing: 1
+                orientation: 'vertical'
+                id: coor_box_1
+            BoxLayout:
+                padding: [0,0,2,0]
+                spacing: 1
+                orientation: 'vertical'
+                id: coor_box_2
         Button:
             pos_hint: {'center_x': .5}
             size_hint: None, None
@@ -934,6 +949,3 @@
             size: 150,20
             text: "Selesai"
             on_press: root.manager.current = 'welcome_scr'
-        Label:
-            font_size: 10
-            text: ""

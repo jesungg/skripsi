@@ -32,6 +32,7 @@ from kivy.uix.image import Image
 from kivy.uix.label import Label
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import Screen, ScreenManager
+from kivy.uix.textinput import TextInput
 #uix lib
 #uix lib
 from kivy.uix.togglebutton import ToggleButton, ToggleButtonBehavior
@@ -808,7 +809,7 @@ class resultScr(Screen): #6
             fps.update()
 
             final=cv2.vconcat([frame1,frame2])
-            cv2.imshow('Frame', final)
+            cv2.imshow('Tracking BS (atas) Tracking KF (bawah)', final)
                 
                 
             keyboard = cv2.waitKey(30)
@@ -847,6 +848,28 @@ class resultScr(Screen): #6
 
         self.ids.img_box.add_widget(gbr_result)
         self.ids.plot_box.add_widget(plot_result)
+        #revisi
+        #menampilkan koordinat
+        #pake text input + wrap text
+        coor_result_x = TextInput(text = str(plotx_),readonly=True, multiline=True,base_direction='ltr')
+        coor_result_y = TextInput(text = str(ploty_),readonly=True, multiline=True,base_direction='ltr')
+        coor_result_kfx = TextInput(text = str(plot_kfx),readonly=True, multiline=True,base_direction='ltr')
+        coor_result_kfy = TextInput(text = str(plot_kfy),readonly=True, multiline=True,base_direction='ltr')
+        coor_result_t = TextInput(text = str(plot_t),readonly=True, multiline=True,base_direction='ltr')
+        coor_result_tkf = TextInput(text = str(plot_tkf),readonly=True, multiline=True,base_direction='ltr')
+        self.ids.coor_box_1.add_widget(Label(text='Time(s) Background Subtraction'))
+        self.ids.coor_box_2.add_widget(coor_result_t)
+        self.ids.coor_box_1.add_widget(Label(text='Koordinat X'))
+        self.ids.coor_box_2.add_widget(coor_result_x)
+        self.ids.coor_box_1.add_widget(Label(text='Koordinat Y'))
+        self.ids.coor_box_2.add_widget(coor_result_y)
+        self.ids.coor_box_1.add_widget(Label(text='Time(s) Kalman Filter'))
+        self.ids.coor_box_2.add_widget(coor_result_tkf)
+        self.ids.coor_box_1.add_widget(Label(text='Koordinat KFX'))
+        self.ids.coor_box_2.add_widget(coor_result_kfx)
+        self.ids.coor_box_1.add_widget(Label(text='Koordinat KFY'))
+        self.ids.coor_box_2.add_widget(coor_result_kfy)
+
 
     def save():
         pass
